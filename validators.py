@@ -10,18 +10,25 @@ REQUIRED_MISCONDUCT = [
 ]
 
 REJECT_KEYWORDS = [
-    'sworn in', 'appointed', 'confirmed', 'announced', 'nominated',
-    'man pleads', 'woman pleads', 'couple sentenced', 'person guilty',
-    'businessman', 'alien', 'national', 'felon with'
+    'sworn in', 'appointed to', 'confirmed as', 'nominated for',
+    'businessman', 'felon with',
+    'hometown hero', 'honor', 'award', 'recogni'
 ]
 
 OFFICIAL_KEYWORDS = [
     'senator', 'representative', 'congressman', 'congresswoman', 'governor', 'mayor',
-    'judge', 'commissioner', 'council member', 'councilman', 'councilwoman',
+    'judge', 'magistrate', 'commissioner', 'council member', 'councilman', 'councilwoman',
+    'councilmember', 'alderman', 'aldermanic', 'constable',
     'sheriff', 'police chief', 'district attorney', 'attorney general',
     'state representative', 'state senator', 'state treasurer', 'state auditor',
-    'superintendent', 'director', 'chief', 'captain', 'lieutenant', 'sergeant',
-    'warden', 'county clerk', 'county treasurer', 'state police'
+    'superintendent', 'warden', 'jailer', 'county clerk', 'county treasurer',
+    'state police', 'state trooper', 'correctional officer', 'correction officer',
+    'prison guard', 'police officer', 'police detective', 'detective',
+    'deputy sheriff', 'deputy jailer', 'fire chief', 'fire captain',
+    'former sheriff', 'former judge', 'former mayor', 'former officer',
+    'former deputy', 'former detective', 'former trooper', 'former warden',
+    'former chief', 'former councilman', 'former councilmember', 'former commissioner',
+    'former prosecutor', 'former agent', 'former police', 'former prison'
 ]
 
 class CaseValidator:
@@ -60,10 +67,11 @@ class CaseValidator:
         if not has_misconduct:
             return False
         
-        # Must have location
+        # Location check - accept any non-empty location including Unknown
+        # since press releases are from US federal offices covering US/territories
         location = case.get('location', '').strip()
-        if not location or location.lower() == 'unknown':
-            return False
+        if not location:
+            case['location'] = 'United States'
         
         return True
     
@@ -84,7 +92,7 @@ class CaseValidator:
             return 'No misconduct finding'
         
         location = case.get('location', '').strip()
-        if not location or location.lower() == 'unknown':
+        if not location:
             return 'Unknown location'
         
         return 'Unknown reason'
