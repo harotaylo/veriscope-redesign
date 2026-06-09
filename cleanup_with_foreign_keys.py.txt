@@ -1,0 +1,90 @@
+import re
+from datetime import datetime
+from supabase import create_client, Client
+
+SUPABASE_URL = 'https://sqaibfaniwbixviptilx.supabase.co'
+SUPABASE_KEY = 'sb_publishable_xopITtNbV8D0CGRi0Qq1kg_5wLInWPJ'
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+print("\n" + "="*70)
+print("🧹 VeriScope Location Cleanup")
+print("="*70)
+
+print("\n📚 Building lookup caches...\n")
+
+states = supabase.table('states').select('id, name').execute()
+STATE_CACHE = {s['name']: s['id'] for s in states.data}
+print(f"✓ Cached {len(STATE_CACHE)} states")
+
+counties = supabase.table('counties').select('id, name, state_id').execute()
+COUNTY_CACHE = {}
+for c in counties.data:
+    if c['state_id'] not in COUNTY_CACHE:
+        COUNTY_CACHE[c['state_id']] = {}
+    COUNTY_CACHE[c['state_id']][c['name']] = c['id']
+print(f"✓ Cached {sum(len(v) for v in COUNTY_CACHE.values())} counties")
+
+cities = supabase.table('cities').select('id, name, county_id').execute()
+CITY_CACHE = {}
+for c in cities.data:
+    if c['county_id'] not in CITY_CACHE:
+        CITY_CACHE[c['county_id']] = {}
+    CITY_CACHE[c['county_id']][c['name']] = c['id']
+print(f"✓ Cached {sum(len(v) for v in CITY_CACHE.values())} cities")
+
+print("\n📋 Processing cases...\n")
+
+total, updated, with_state, with_county, with_city = 0, 0, 0, 0, 0
+offset = 0
+
+while True:
+    cases = supabase.table('cases').select('*').range(offset, offset + 99).execute()
+    if not cases.data:
+        break
+    
+    for case in cases.data:
+        total += 1
+        state_id = None
+        
+        if 'usao-sc' in case.get('source_url', '').lower():
+            state_id = STATE_CACHE.get('South Carolina')
+        
+        if state_id:
+            with_state += 1
+            details = case.get('details', '')
+            
+            county_id = None
+            m = re.search(r'([A-Z][a-z]+\s+County)', details)
+            if m and state_id in COUNTY_CACHE:
+                county_id = COUNTY_CACHE[state_id].get(m.group(1))
+            
+            if county_id:
+                with_county += 1
+            
+            city_id = None
+            if county_id:
+                m = re.search(r'\bin\s+([A-Z][a-z]+)', details)
+                if m and county_id in CITY_CACHE:
+                    city_id = CITY_CACHE[county_id].get(m.group(1))
+            
+            if city_id:
+                with_city += 1
+            
+            updates = {'state_id': state_id, 'updated_at': datetime.utcnow().isoformat()}
+            if county_id:
+                updates['county_id'] = county_id
+            if city_id:
+                updates['city_id'] = city_id
+            
+            supabase.table('cases').update(updates).eq('id', case['id']).execute()
+            updated += 1
+            
+            if total % 100 == 0:
+                print(f"✓ Processed {total} | State: {with_state} | County: {with_county} | City: {with_city}")
+    
+    offset += 100
+
+print("\n" + "="*70)
+print("✅ CLEANUP COMPLETE")
+print("="*70)
+print(f"\nTotal: {total} | Updated: {updated} | State: {with_state} | County: {with_county} | City: {with_city}\n")

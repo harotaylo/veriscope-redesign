@@ -1,0 +1,42 @@
+[
+  {
+    "full_name": "Unknown Official",
+    "title": "Consumer Law Guide",
+    "position_title": "Representative",
+    "official_type": "Legislative",
+    "location": "Maine",
+    "level": "Federal",
+    "category": "Corruption",
+    "abuse_of_power_type": "Corruption",
+    "case_status": "Convicted",
+    "date_charged": "2025-09-10",
+    "details": "Consumer Law GuideData Breach NoticesScam AlertsSubscribe to OAG NewsLatest Press Releases5/13/2026Attorney General Aaron M. Frey and Representative Michele Meyer Announce $1 Million Investment in Mainspring\u2019s Recovery Support Model4/02/2026Attorney General Aaron M. Frey Wins Appeals Court Ruling Against HUD Over Housing-Assistance Programs2/02/2026Domestic Abuse Homicide Review Panel, Governor Mills, and Attorney General Frey Release 15th Biennial Report1/29/2026Attorney General Aaron M. Frey Joins Multistate Coalition Condemning DOJ Threats Against Minnesota1/26/2026Attorney General's Office Establishes Dedicated Email Address to Report Federal Government Action in MaineView all Press ReleasesDeadly Force- AG Investigation Reports6/05/2026Attorney General's Report on the Use of Deadly Force: Hartland, September 10, 20254/17/2026Attorney General's Report on the Use of Deadly Force: Wilton, July 11, 20251/02/2026Attorney General's Report on the Use of Deadly Force: Hartford, March 29, ",
+    "source_url": "https://www.maine.gov/ag/news",
+    "source_type": "court_record",
+    "source_date": "2026-06-08",
+    "publication_status": "published",
+    "verified_by": "state_ag_scraper",
+    "verified_at": "2026-06-08T18:48:15.442016",
+    "fingerprint": "f7218ac1c176cfdaaeb6cf62906f5698"
+  },
+  {
+    "full_name": "Unknown Official",
+    "title": "Press Release",
+    "position_title": "Governor",
+    "official_type": "Executive",
+    "location": "Massachusetts",
+    "level": "State",
+    "category": "Corruption",
+    "abuse_of_power_type": "Corruption",
+    "case_status": "Convicted",
+    "date_charged": "2026-06-08",
+    "details": "Press ReleaseAG Campbell Secures Victory In Lawsuit Challenging Trump Administration\u2019s Unlawful $100k Tax For H-1B Visas6/08/2026Office of the Attorney GeneralPress ReleaseAG's Office Secures Up To $770,000 in Settlements with Former Whitinsville Applied Behavioral Analysis Provider and Its Co-Owners for Submitting False Claims to MassHealth6/05/2026Office of the Attorney GeneralSettlements Resolve Allegations that Flexible Fundamentals and Owners Billed MassHealth Managed Care Entities for Services Not Provided and Failed to Provide Adequate Supervision to StaffPress ReleaseAG's Office, Gaming Commission, And State Lottery Issue Consumer Advisory Ahead Of 2026 FIFA World Cup6/04/2026Office of the Attorney GeneralAdvisory Warns Public About Illegal Gaming Sites and Highlights Legal, Licensed Gaming Options in MassachusettsPress ReleaseAG Campbell Sues U.S. Department Of The Interior For Illegally Cancelling TotalEnergies Offshore Wind Lease6/02/2026Office of the Attorney GeneralTrump A",
+    "source_url": "https://www.mass.gov/orgs/office-of-the-attorney-general/news",
+    "source_type": "court_record",
+    "source_date": "2026-06-08",
+    "publication_status": "published",
+    "verified_by": "state_ag_scraper",
+    "verified_at": "2026-06-08T18:48:21.453232",
+    "fingerprint": "674204d27b0999280b78fdfd7e332bc3"
+  }
+]

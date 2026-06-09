@@ -14,61 +14,70 @@ class CaseTransformer:
         return transformed
     
     def _transform_case(self, case):
-        """Transform single case"""
-        # Extract person name from entities
-        full_name = ''
-        first_name = ''
-        last_name = ''
-        if case.get('entities'):
+        """Transform single case — prefers enriched top-level fields from claude_enricher."""
+        # Use enriched top-level fields (set by claude_enricher or scrapers directly).
+        # Fall back to entities[] only if top-level fields are absent (legacy path).
+        full_name = case.get('full_name', '') or ''
+        first_name = case.get('first_name', '') or ''
+        last_name = case.get('last_name', '') or ''
+
+        if not full_name and case.get('entities'):
             for entity in case['entities']:
                 if entity.get('type') == 'person' and entity.get('name'):
                     full_name = entity['name']
-                    parts = full_name.split()
-                    first_name = parts[0] if len(parts) > 0 else ''
-                    last_name = parts[-1] if len(parts) > 1 else ''
                     break
-        
-        # Extract agency from entities
-        agency_or_office = ''
-        if case.get('entities'):
+
+        if not first_name and full_name and full_name.lower() not in ('unknown', 'unknown official'):
+            parts = full_name.split()
+            first_name = parts[0] if parts else ''
+            last_name = parts[-1] if len(parts) > 1 else ''
+
+        agency_or_office = case.get('agency_or_office', '') or ''
+        if not agency_or_office and case.get('entities'):
             for entity in case['entities']:
                 if entity.get('office'):
                     agency_or_office = entity['office']
                     break
-        
-        # Determine level from case data
-        level = self._determine_level(case)
-        
-        # Parse dates
-        date_str = self._parse_date(case.get('occurred_at', '2026-01-01'))
-        source_date_str = self._parse_date(case.get('ingested_at', date_str))
-        
-        # Generate fingerprint for deduplication
-        fingerprint = self._generate_fingerprint(full_name, case.get('title', ''), date_str)
-        
+
+        # Prefer enriched level/location; fall back to heuristic determination.
+        level = case.get('level') or self._determine_level(case)
+        location = case.get('location', 'Unknown') or 'Unknown'
+
+        date_str = self._parse_date(
+            case.get('date_charged') or case.get('occurred_at') or case.get('source_date')
+        )
+        source_date_str = self._parse_date(
+            case.get('source_date') or case.get('ingested_at') or date_str
+        )
+
+        # Preserve the original scraper fingerprint — do not regenerate.
+        fingerprint = case.get('fingerprint') or self._generate_fingerprint(
+            full_name, case.get('title', ''), date_str
+        )
+
         return {
-            'title': case.get('title', ''),
-            'full_name': full_name,
-            'first_name': first_name,
-            'last_name': last_name,
-            'agency_or_office': agency_or_office,
-            'level': level,
-            'specific_charges': '',
-            'summary': case.get('ai_summary', ''),
-            'ai_summary': case.get('ai_summary', ''),
-            'details': case.get('details', ''),
-            'risk_score': case.get('risk_score', 0.5),
-            'date': date_str,
-            'location': case.get('location', 'Unknown'),
-            'category': case.get('category', ''),
-            'source_url': case.get('source_url', ''),
-            'source_type': 'court_record',
-            'source_date': source_date_str,
-            'source_notes': case.get('source_notes', ''),
-            'fingerprint': fingerprint,
+            'title':              case.get('title', ''),
+            'full_name':          full_name,
+            'first_name':         first_name,
+            'last_name':          last_name,
+            'agency_or_office':   agency_or_office,
+            'level':              level,
+            'location':           location,
+            'specific_charges':   case.get('specific_charges', ''),
+            'summary':            case.get('ai_summary', ''),
+            'ai_summary':         case.get('ai_summary', ''),
+            'details':            case.get('details', ''),
+            'risk_score':         case.get('risk_score', 0.5),
+            'date':               date_str,
+            'category':           case.get('category', ''),
+            'source_url':         case.get('source_url', ''),
+            'source_type':        case.get('source_type', 'official_report'),
+            'source_date':        source_date_str,
+            'source_notes':       case.get('source_notes', ''),
+            'fingerprint':        fingerprint,
             'publication_status': 'draft',
-            'verified_by': None,
-            'verified_at': None
+            'verified_by':        case.get('verified_by'),
+            'verified_at':        case.get('verified_at'),
         }
     
     def _determine_level(self, case):

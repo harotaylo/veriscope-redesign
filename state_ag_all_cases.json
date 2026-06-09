@@ -1,0 +1,40 @@
+[
+  {
+    "full_name": "Unknown Official",
+    "title": "Alaska Lawyer Referral Service",
+    "position_title": "Attorney General",
+    "official_type": "Executive",
+    "location": "AK",
+    "level": "State",
+    "category": "Corruption",
+    "abuse_of_power_type": "Corruption",
+    "case_status": "Convicted",
+    "details": "The Attorney General and Department of Law staff may not provide legal advice to private citizens or organizations. Please contact an attorney if you need legal advice.TheAlaska Lawyer Referral Serviceor your local bar association may be able to assist you in locating a lawyer.",
+    "source_url": "https://law.alaska.gov/news/",
+    "source_type": "court_record",
+    "source_date": "2026-06-07",
+    "publication_status": "draft",
+    "verified_by": "state_ag_scraper",
+    "verified_at": "2026-06-07T23:42:52.153781",
+    "fingerprint": "f0350f5315ae84a1"
+  },
+  {
+    "full_name": "Unknown Official",
+    "title": "Full Article Here",
+    "position_title": "Sheriff",
+    "official_type": "Executive",
+    "location": "NC",
+    "level": "State",
+    "category": "Corruption",
+    "abuse_of_power_type": "Corruption",
+    "case_status": "Convicted",
+    "details": "The case involved work from \u201ccurrent and retired agent and officers\u201d in the Surry County Sheriff\u2019s Office, the State Bureau of Investigations, the State Crime Lab, the State Bureau Cold Case Unit, the Forsyth County Sheriff\u2019s Office, and the South Carolina Law Enforcement Division and Stokes County Sheriff\u2019s Office, the release said.",
+    "source_url": "https://ncdoj.gov/news",
+    "source_type": "court_record",
+    "source_date": "2026-06-07",
+    "publication_status": "draft",
+    "verified_by": "state_ag_scraper",
+    "verified_at": "2026-06-07T23:44:25.856654",
+    "fingerprint": "be166176378ea961"
+  }
+]

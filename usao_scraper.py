@@ -6,11 +6,54 @@ from bs4 import BeautifulSoup
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 log = logging.getLogger(__name__)
 
-SEARCH_KEYWORDS = ["sheriff","judge","mayor","police officer","councilman","councilmember","councilwoman","magistrate","commissioner","governor","senator","representative","warden","jailer","correctional officer","correction officer","deputy sheriff","police chief","fire chief","state trooper","district attorney","comptroller","auditor","alderman","constable","prison guard","former officer","former deputy","former detective","former trooper","former prosecutor","former agent"]
+SEARCH_KEYWORDS = [
+    # Judicial
+    "judge","magistrate judge","district judge","circuit judge","bankruptcy judge",
+    "immigration judge","administrative law judge","superior court judge","county judge",
+    "municipal court judge","magistrate","clerk of court",
+    # Legislative - Federal
+    "senator","congressman","congresswoman","representative",
+    # Legislative - State
+    "state senator","state representative","state assemblyman","state assemblywoman",
+    "state delegate","state lawmaker","state legislator",
+    # Legislative - Local
+    "councilman","councilmember","councilwoman","alderman","alderwoman",
+    "county commissioner","county supervisor","school board member",
+    # Executive - State/Local
+    "governor","mayor","city manager","county executive","lieutenant governor",
+    # Law Enforcement - Federal
+    "fbi agent","dea agent","atf agent","ice agent","ice officer",
+    "border patrol agent","customs officer","u.s. marshal","deputy marshal",
+    "secret service agent","postal inspector","tsa officer","irs agent","federal agent",
+    # Law Enforcement - State
+    "state trooper","highway patrol officer",
+    # Law Enforcement - Local
+    "sheriff","deputy sheriff","police officer","police chief","police detective",
+    "constable","warden","jailer","correctional officer","correction officer",
+    "jail officer","prison guard","probation officer","parole officer",
+    "fire chief","district attorney","comptroller","auditor",
+    "former officer","former deputy","former detective","former trooper",
+    "former prosecutor","former agent","former warden",
+]
 
-MISCONDUCT_KEYWORDS = ["convicted","guilty plea","pleaded guilty","pled guilty","pleads guilty","plead guilty","indicted","grand jury","charged with","charges filed","arrested","sentenced","imprisoned","removed from office","suspended","censured","bribery","extortion","fraud","embezzlement","corruption","money laundering","wire fraud","excessive force","obstruction","perjury","sexual assault","csam","child pornography","child exploitation","child sexual abuse","sex trafficking","civil rights"]
+MISCONDUCT_KEYWORDS = [
+    "convicted","guilty plea","pleaded guilty","pled guilty","pleads guilty",
+    "plead guilty","indicted","grand jury","charged with","charges filed",
+    "arrested","sentenced","imprisoned","removed from office","suspended","censured",
+    "bribery","extortion","fraud","embezzlement","corruption","money laundering",
+    "wire fraud","mail fraud","excessive force","obstruction","perjury",
+    "sexual assault","csam","child pornography","child exploitation",
+    "child sexual abuse","sex trafficking","civil rights","drug trafficking",
+    "racketeering","tax evasion","kickback",
+]
 
-REJECT_KEYWORDS = ["sworn in","appointed","confirmed","nominated","announced candidacy","honors","hometown hero","recognizes","award","weekly","sentenced a","sentences","judge sentences","judge orders","judge hands","federal judge sentences"]
+REJECT_KEYWORDS = [
+    "sworn in","takes office","inaugurated","appointed","confirmed","nominated",
+    "announced candidacy","honors","hometown hero","recognizes","award","retirement",
+    "retires","promoted","promotion","elected","wins election",
+    # Only reject "judge sentences X" when X is clearly a non-official (not "judge sentenced")
+    "judge sentences drug dealer","judge sentences gang","judge sentences terrorist",
+]
 
 SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": "Mozilla/5.0 (compatible; VeriScope-Research-Bot/1.0)"})
@@ -55,7 +98,13 @@ def contains_any(text, kws):
 
 def is_relevant(title):
     t = title.lower()
-    if contains_any(t, REJECT_KEYWORDS): return False
+    # Hard reject non-misconduct events
+    non_misconduct = [
+        "sworn in", "takes office", "inaugurated", "appointed", "confirmed", "nominated",
+        "announced candidacy", "hometown hero", "recognizes", "retires", "elected",
+        "wins election",
+    ]
+    if contains_any(t, non_misconduct): return False
     if not contains_any(t, MISCONDUCT_KEYWORDS): return False
     return True
 
@@ -90,9 +139,24 @@ def case_status(t, b):
 
 def official_type(t, b):
     c = f"{t} {b}".lower()
-    if any(k in c for k in ["judge","magistrate","clerk of court"]): return "Judicial"
-    if any(k in c for k in ["police","sheriff","deputy","trooper","correctional","jailer","warden","customs","border patrol","detective","correction officer","prison guard"]): return "Law Enforcement"
-    if any(k in c for k in ["senator","representative","congressman","congresswoman","governor","mayor","city council","councilman","councilmember","councilwoman","alderman"]): return "Legislative"
+    if any(k in c for k in [
+        "judge","magistrate","clerk of court","superior court","district court judge",
+        "bankruptcy judge","immigration judge","administrative law judge",
+    ]): return "Judicial"
+    if any(k in c for k in [
+        "police","sheriff","deputy","trooper","correctional","jailer","warden",
+        "customs","border patrol","detective","correction officer","prison guard",
+        "probation officer","parole officer","fbi agent","dea agent","atf agent",
+        "ice agent","ice officer","u.s. marshal","deputy marshal","secret service",
+        "postal inspector","tsa officer","irs agent","federal agent","federal officer",
+    ]): return "Law Enforcement"
+    if any(k in c for k in [
+        "senator","representative","congressman","congresswoman",
+        "state senator","state representative","state assemblyman","state assemblywoman",
+        "state delegate","state lawmaker","state legislator",
+        "city council","councilman","councilmember","councilwoman","alderman","alderwoman",
+        "county commissioner","county supervisor","school board",
+    ]): return "Legislative"
     return "Executive"
 
 def abuse_type(t, b):
