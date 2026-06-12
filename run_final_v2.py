@@ -1,6 +1,6 @@
 """
-VeriScope Production Pipeline v2.0
-Justice.gov API + Batch Upsert + Comprehensive Logging
+VeriScope Production Pipeline v2.0 - FIXED v2
+Justice.gov API + Batch Upsert + Date Validation + Correct Status Values
 """
 
 import os
@@ -12,13 +12,8 @@ import re
 from datetime import datetime
 from typing import List, Dict, Optional
 
-# ============================================================================
-# CONFIGURATION
-# ============================================================================
-
 SUPABASE_URL = "https://sqaibfaniwbixviptilx.supabase.co"
 SUPABASE_KEY = "sb_publishable_xopITtNbV8D0CGRi0Qq1kg_5wLInWPJ"
-
 DOJ_API = "https://www.justice.gov/api/v1/press_releases.json"
 
 OFFICIAL_KEYWORDS = [
@@ -37,6 +32,14 @@ MISCONDUCT_KEYWORDS = [
 REJECT_KEYWORDS = [
     'sworn in', 'appointed', 'confirmed', 'announced', 'nominated',
     'elected', 'hired', 'promoted', 'released statement'
+]
+
+VALID_CASE_STATUSES = [
+    'Under Investigation', 'Arrested / Detained', 'Booked', 'Charges Filed', 
+    'Indicted', 'Arraigned', 'Bail/Bond Set', 'Discovery', 'Pre-Trial Motions', 
+    'Diversion / Deferred Adjudication', 'Awaiting Trial', 'Plea Bargain Reached', 
+    'Dismissed', 'Acquitted', 'Convicted', 'Sentenced', 'Appealing', 
+    'Parole / Probation', 'Closed / Disposed'
 ]
 
 USAO_TO_STATE = {
@@ -75,10 +78,6 @@ USAO_TO_STATE = {
     'usao-d': 'Wyoming'
 }
 
-# ============================================================================
-# LOGGING
-# ============================================================================
-
 class Logger:
     def __init__(self):
         self.logs = []
@@ -103,14 +102,8 @@ class Logger:
 
 logger = Logger()
 
-# ============================================================================
-# SCRAPER
-# ============================================================================
-
 def scrape_justice_gov(pages: int = 5) -> List[Dict]:
-    """Scrape DOJ press releases from justice.gov API"""
     logger.info("Starting DOJ API scrape...")
-    
     cases = []
     session = requests.Session()
     session.headers.update({'User-Agent': 'VeriScope/1.0'})
@@ -160,28 +153,18 @@ def scrape_justice_gov(pages: int = 5) -> List[Dict]:
     logger.success(f"Scraped {len(cases)} raw cases")
     return cases
 
-# ============================================================================
-# VALIDATION
-# ============================================================================
-
 def is_valid_case(case: Dict) -> bool:
-    """Check if case meets validation criteria"""
     text = f"{case.get('title', '')} {case.get('details', '')}".lower()
     
-    # Check reject keywords
     if any(kw in text for kw in REJECT_KEYWORDS):
         return False
     
-    # Check official keywords
     has_official = any(kw in text for kw in OFFICIAL_KEYWORDS)
-    
-    # Check misconduct keywords
     has_misconduct = any(kw in text for kw in MISCONDUCT_KEYWORDS)
     
     return has_official and has_misconduct
 
 def validate_cases(cases: List[Dict]) -> tuple:
-    """Validate cases against criteria"""
     logger.info(f"Validating {len(cases)} cases...")
     
     valid = []
@@ -196,26 +179,19 @@ def validate_cases(cases: List[Dict]) -> tuple:
     logger.success(f"Valid: {len(valid)}, Rejected: {rejected}")
     return valid, rejected
 
-# ============================================================================
-# ENRICHMENT
-# ============================================================================
-
 def extract_location_from_url(url: str) -> str:
-    """Extract state from USAO URL pattern"""
     for pattern, state in USAO_TO_STATE.items():
         if pattern in url.lower():
             return state
     return "Unknown"
 
 def extract_name(text: str) -> str:
-    """Extract official name from text"""
     match = re.search(r'\b([A-Z][a-z]+\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\b', text)
     if match:
         return match.group(1)
     return "Unknown Official"
 
 def extract_position(text: str) -> str:
-    """Extract position title"""
     text_lower = text.lower()
     
     if 'judge' in text_lower:
@@ -238,24 +214,24 @@ def extract_position(text: str) -> str:
     return 'Public Official'
 
 def extract_case_status(text: str) -> str:
-    """Extract case status from text"""
     text_lower = text.lower()
     
     if 'convicted' in text_lower or 'guilty plea' in text_lower:
         return 'Convicted'
-    elif 'indicted' in text_lower:
-        return 'Indicted'
     elif 'sentenced' in text_lower:
         return 'Sentenced'
-    elif 'charged' in text_lower:
-        return 'Charged'
+    elif 'indicted' in text_lower:
+        return 'Indicted'
     elif 'acquitted' in text_lower:
         return 'Acquitted'
+    elif 'dismissed' in text_lower:
+        return 'Dismissed'
+    elif 'charged' in text_lower or 'charges filed' in text_lower:
+        return 'Charges Filed'
     
-    return 'Charged'
+    return 'Charges Filed'
 
 def extract_category(text: str) -> str:
-    """Extract misconduct category"""
     text_lower = text.lower()
     
     if 'sexual' in text_lower or 'csam' in text_lower or 'child' in text_lower:
@@ -272,8 +248,13 @@ def extract_category(text: str) -> str:
     return 'Misconduct'
 
 def enrich_case(case: Dict) -> Dict:
-    """Enrich case with extracted data"""
     text = f"{case.get('title', '')} {case.get('details', '')}"
+    
+    source_date = case.get('source_date', '').strip()
+    if not source_date or source_date == 'None' or not source_date[:10]:
+        source_date = datetime.now().strftime('%Y-%m-%d')
+    else:
+        source_date = source_date[:10]
     
     enriched = {
         'full_name': extract_name(text),
@@ -286,25 +267,19 @@ def enrich_case(case: Dict) -> Dict:
         'official_type': 'Judicial' if 'judge' in text.lower() else 'Executive',
         'details': case.get('details', '')[:2000],
         'source_url': case.get('source_url', ''),
-        'source_date': case.get('source_date', datetime.now().strftime('%Y-%m-%d')),
+        'source_date': source_date,
         'source_type': 'court_record',
         'publication_status': 'draft',
         'verified_by': 'bulk_import',
         'verified_at': datetime.now().isoformat(),
     }
     
-    # Generate fingerprint
     fp_text = f"{enriched['full_name']}{enriched['position_title']}{enriched['source_url']}"
     enriched['fingerprint'] = hashlib.md5(fp_text.encode()).hexdigest()
     
     return enriched
 
-# ============================================================================
-# DEDUPLICATION
-# ============================================================================
-
 def deduplicate_cases(cases: List[Dict]) -> List[Dict]:
-    """Remove duplicate cases"""
     logger.info(f"Deduplicating {len(cases)} cases...")
     
     seen = set()
@@ -319,12 +294,7 @@ def deduplicate_cases(cases: List[Dict]) -> List[Dict]:
     logger.success(f"Unique: {len(unique)}, Removed: {len(cases) - len(unique)}")
     return unique
 
-# ============================================================================
-# SUPABASE UPLOAD
-# ============================================================================
-
 def upload_to_supabase(cases: List[Dict], dry_run: bool = True) -> Dict:
-    """Upload cases to Supabase in batches"""
     logger.info(f"Connecting to Supabase...")
     
     try:
@@ -365,12 +335,7 @@ def upload_to_supabase(cases: List[Dict], dry_run: bool = True) -> Dict:
     
     return {'success': success, 'errors': errors, 'total': len(cases)}
 
-# ============================================================================
-# STATISTICS
-# ============================================================================
-
 def get_statistics(cases: List[Dict]) -> Dict:
-    """Generate statistics"""
     logger.info("Generating statistics...")
     
     stats = {
@@ -396,13 +361,9 @@ def get_statistics(cases: List[Dict]) -> Dict:
     
     return stats
 
-# ============================================================================
-# MAIN
-# ============================================================================
-
 def main():
     logger.info("="*70)
-    logger.info("VeriScope Production Pipeline v2.0")
+    logger.info("VeriScope Production Pipeline v2.0 FIXED v2")
     logger.info("="*70)
     
     upload_flag = "--upload" in sys.argv
@@ -431,7 +392,7 @@ def main():
     
     logger.info("\n[STEP 3/5] ENRICHMENT")
     logger.info("="*70)
-    logger.info("Extracting names, positions, statuses...")
+    logger.info("Extracting names, positions, statuses, VALIDATING DATES...")
     enriched_cases = [enrich_case(c) for c in valid_cases]
     logger.success(f"Enriched {len(enriched_cases)} cases")
     
@@ -465,7 +426,6 @@ def main():
             'upload_success': upload_result['success'],
             'upload_errors': upload_result['errors'],
             'statistics': stats,
-            'logs': logger.logs
         }
         json.dump(report, f, indent=2)
     logger.success(f"Saved: pipeline_report_{timestamp}.json")
