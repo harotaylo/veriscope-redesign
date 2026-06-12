@@ -1,77 +1,82 @@
 """
-Upload validated and transformed cases to Supabase.
+Supabase Uploader - Gate 2 validation
+Validates jurisdiction_id before INSERT
 """
 
 from supabase import create_client
 import os
-from datetime import datetime
 
 class SupabaseUploader:
     def __init__(self):
-        url = os.getenv('SUPABASE_URL')
-        key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+        self.url = os.getenv('SUPABASE_URL')
+        self.key = os.getenv('SUPABASE_KEY')
+        self.client = create_client(self.url, self.key)
+        self.jurisdiction_map = None
+    
+    def _get_jurisdiction_map(self):
+        if self.jurisdiction_map is None:
+            response = self.client.table('jurisdictions').select('*').execute()
+            self.jurisdiction_map = {
+                row['jurisdiction_code']: row['id']
+                for row in response.data
+            }
+        return self.jurisdiction_map
+    
+    def _get_jurisdiction_id(self, location):
+        if not location:
+            return None
         
-        if not url or not key:
-            raise ValueError("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set")
+        jmap = self._get_jurisdiction_map()
+        location_upper = location.upper()
         
-        self.client = create_client(url, key)
+        if location_upper in jmap:
+            return jmap[location_upper]
+        
+        parts = location.split(',')
+        if parts:
+            state_code = parts[0].strip().upper()
+            if state_code in jmap:
+                return jmap[state_code]
+        
+        for code, jid in jmap.items():
+            if code in location_upper:
+                return jid
+        
+        return None
     
     def upload(self, cases, dry_run=False):
-        """Upload cases to Supabase"""
-        uploaded = []
-        failed = []
-        duplicates = []
+        results = {
+            'uploaded': 0,
+            'duplicates': 0,
+            'failed': 0,
+            'rejected': 0,
+            'details': {'rejected': [], 'failed': []}
+        }
         
         for case in cases:
-            try:
-                # Check for duplicate by fingerprint
-                existing = self.client.table('cases').select('id').eq(
-                    'fingerprint', case['fingerprint']
-                ).execute()
-                
-                if existing.data:
-                    duplicates.append({
-                        'case': case['title'],
-                        'reason': 'Duplicate fingerprint'
-                    })
-                    continue
-                
-                if not dry_run:
-                    # Insert case
-                    response = self.client.table('cases').insert(case).execute()
-                    uploaded.append(case['title'])
-                else:
-                    uploaded.append(case['title'])
+            jurisdiction_id = self._get_jurisdiction_id(case.get('location'))
             
-            except Exception as e:
-                failed.append({
-                    'case': case['title'],
-                    'error': str(e)
+            if not jurisdiction_id:
+                results['rejected'] += 1
+                results['details']['rejected'].append({
+                    'case': case.get('title', 'Unknown'),
+                    'reason': f"No valid jurisdiction found"
                 })
+                continue
+            
+            case['jurisdiction_id'] = jurisdiction_id
+            
+            if not dry_run:
+                try:
+                    self.client.table('cases').insert(case).execute()
+                    results['uploaded'] += 1
+                except Exception as e:
+                    results['failed'] += 1
+                    results['details']['failed'].append({
+                        'case': case.get('title', 'Unknown'),
+                        'error': str(e)
+                    })
+            else:
+                results['uploaded'] += 1
         
-        return {
-            'uploaded': len(uploaded),
-            'failed': len(failed),
-            'duplicates': len(duplicates),
-            'details': {
-                'uploaded': uploaded,
-                'failed': failed,
-                'duplicates': duplicates
-            }
-        }
-    
-    def report(self, result):
-        """Print upload report"""
-        print(f"\n{'='*60}")
-        print(f"UPLOAD REPORT")
-        print(f"{'='*60}")
-        print(f"✓ Uploaded: {result['uploaded']}")
-        print(f"✗ Failed: {result['failed']}")
-        print(f"⚠ Duplicates skipped: {result['duplicates']}")
-        
-        if result['failed'] > 0:
-            print(f"\nFailed cases:")
-            for item in result['details']['failed']:
-                print(f"  - {item['case']}: {item['error']}")
-        
-        print(f"{'='*60}\n")
+        return results
