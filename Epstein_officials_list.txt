@@ -1,0 +1,123 @@
+Name	Title/Position
+Donald Trump	President
+Joe Biden	Former President
+Barack Obama	Former President
+Bill Clinton	Former President
+George W. Bush	Former President
+JD Vance	Vice President
+Kamala Harris	Former Vice President
+Mike Pence	Former Vice President
+Dan Quayle	Former Vice President
+Melania Trump	Former First Lady
+Jill Biden	Former First Lady
+Michelle Obama	Former First Lady
+Hillary Clinton	Former First Lady, Former Secretary of State
+Ivanka Trump	Former White House Advisor
+Jared Kushner	Former White House Advisor
+Hunter Biden	Son of Former President Biden
+Ashley Biden	Daughter of Former President Biden
+Chelsea Clinton	Daughter of Former President Clinton
+🏛️ Cabinet & Senior Administration Officials
+Name	Title/Position
+Antony Blinken	Former Secretary of State
+Mike Pompeo	Former Secretary of State
+Marco Rubio	Secretary of State
+Hillary Clinton	Former Secretary of State
+Janet Reno	Former Attorney General
+Merrick Garland	Former Attorney General
+Eric Holder	Former Attorney General
+Pam Bondi	Attorney General
+Bill Barr	Former Attorney General
+Jeff Sessions	Former Attorney General
+Loretta Lynch	Former Attorney General
+Timothy Geithner	Former Treasury Secretary
+Larry Summers	Former Treasury Secretary
+Jack Lew	Former Treasury Secretary
+Steve Mnuchin	Former Treasury Secretary
+Howard Lutnick	Commerce Secretary
+Janet Napolitano	Former Homeland Security Secretary
+Nikki Haley	Former UN Ambassador
+Bill Richardson	Former UN Ambassador, Former Governor
+John Bolton	Former National Security Advisor
+Susan Rice	Former National Security Advisor
+James Comey	Former FBI Director
+Robert S. Mueller III	Former FBI Director (Special Counsel)
+Kash Patel	FBI Director
+Dan Bongino	FBI Deputy Director
+Rod Rosenstein	Former Deputy Attorney General
+Todd Blanche	Deputy Attorney General
+Tom Reynolds	Former White House Counsel
+🏛️ U.S. Senators (Current & Former)
+Name	Title/Position
+Chuck Grassley	Senate Judiciary Committee Chairman (R-IA)
+Dick Durbin	Senate Judiciary Committee Ranking Member (D-IL)
+Chuck Schumer	Senate Majority Leader (D-NY)
+Adam Schiff	Senator (D-CA)
+Marco Rubio	Senator (R-FL)
+Lindsey Graham	Senator (R-SC)
+Mitt Romney	Former Senator (R-UT)
+Cory Booker	Senator (D-NJ)
+Ron Wyden	Senator (D-OR)
+Tim Scott	Senator (R-SC)
+Ben Sasse	Former Senator (R-NE)
+John McCain	Former Senator (R-AZ) (Deceased)
+Bob Menendez	Former Senator (D-NJ)
+Ed Markey	Senator (D-MA)
+Debbie Stabenow	Senator (D-MI)
+John Kennedy	Senator (R-LA)
+Tom Cotton	Senator (R-AR)
+Josh Hawley	Senator (R-MO)
+Marsha Blackburn	Senator (R-TN)
+Rick Scott	Senator (R-FL)
+Ron Johnson	Senator (R-WI)
+Rand Paul	Senator (R-KY)
+🏛️ U.S. Representatives (Current & Former)
+Name	Title/Position
+Hakeem Jeffries	House Minority Leader (D-NY)
+Nancy Pelosi	Former Speaker (D-CA)
+Jim Jordan	House Judiciary Committee Chairman (R-OH)
+Jamie Raskin	House Judiciary Committee Ranking Member (D-MD)
+Ro Khanna	Representative (D-CA), Act Co-Sponsor
+Thomas Massie	Representative (R-KY), Act Co-Sponsor
+Alexandria Ocasio-Cortez	Representative (D-NY)
+Marjorie Taylor Greene	Representative (R-GA)
+Matt Gaetz	Former Representative (R-FL)
+Adam Schiff	Former Representative (D-CA)
+Jerry Nadler	Representative (D-NY)
+Steny Hoyer	Former Representative (D-MD)
+Eric Swalwell	Representative (D-CA)
+Ted Lieu	Representative (D-CA)
+Pramila Jayapal	Representative (D-WA)
+Zoe Lofgren	Representative (D-CA)
+Nancy Mace	Representative (R-SC)
+Chip Roy	Representative (R-TX)
+Byron Donalds	Representative (R-FL)
+Lauren Boebert	Representative (R-CO)
+Elise Stefanik	Representative (R-NY)
+🏛️ Governors (Current & Former)
+Name	Title/Position
+Ron DeSantis	Governor of Florida (R)
+Gavin Newsom	Governor of California (D)
+J.B. Pritzker	Governor of Illinois (D)
+Mike Huckabee	Former Governor (R-AR)
+Nikki Haley	Former Governor (R-SC)
+Bill Richardson	Former Governor (D-NM) (Deceased)
+John Kasich	Former Governor (R-OH)
+Jeb Bush	Former Governor (R-FL)
+🏛️ Other Notable Officials & Political Figures
+Name	Title/Position
+Steve Bannon	Former White House Chief Strategist
+Michael Cohen	Former Attorney for Donald Trump
+Rudy Giuliani	Former Mayor of NYC, Trump Attorney
+Kathy Ruemmler	Former White House Counsel
+Rahm Emanuel	Former Mayor of Chicago, Former White House Chief of Staff
+John Brennan	Former CIA Director
+Michael Flynn	Former National Security Advisor (Deceased)
+Mark Meadows	Former White House Chief of Staff
+Mick Mulvaney	Former White House Chief of Staff
+Tony Podesta	Lobbyist
+Karl Rove	Former White House Deputy Chief of Staff
+George Conway	Attorney
+Alan Dershowitz	Attorney (Professor)
+Kenneth Starr	Former Independent Counsel (Deceased)
+David Boies	Attorney

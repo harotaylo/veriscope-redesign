@@ -1,0 +1,47 @@
+{
+  "timestamp": "20260611_192722",
+  "scraped": 805,
+  "validated": 234,
+  "rejected": 571,
+  "deduplicated": 228,
+  "upload_success": 228,
+  "upload_errors": 0,
+  "statistics": {
+    "total_cases": 228,
+    "by_location": {
+      "Unknown": 108,
+      "Tennessee": 11,
+      "Wisconsin": 20,
+      "West Virginia": 56,
+      "Illinois": 15,
+      "Massachusetts": 8,
+      "Colorado": 1,
+      "Kansas": 5,
+      "Arizona": 2,
+      "New Mexico": 2
+    },
+    "by_position": {
+      "Judge": 135,
+      "Prosecutor": 54,
+      "Public Official": 4,
+      "Mayor": 8,
+      "Representative": 3,
+      "Sheriff": 14,
+      "Police Officer": 9,
+      "Senator": 1
+    },
+    "by_status": {
+      "Convicted": 107,
+      "Indicted": 42,
+      "Charged": 31,
+      "Sentenced": 48
+    },
+    "by_category": {
+      "Corruption": 95,
+      "Financial Crime": 51,
+      "Misconduct": 49,
+      "Sexual Abuse": 24,
+      "Assault": 9
+    }
+  }
+}

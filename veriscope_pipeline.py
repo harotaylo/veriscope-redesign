@@ -159,12 +159,28 @@ class MultiSourceScraper:
 
     def _extract_category(self, text):
         text_lower = text.lower()
-        if 'sexual abuse' in text_lower or 'csam' in text_lower:
+        if 'sexual abuse' in text_lower or 'csam' in text_lower or 'child sexual' in text_lower:
             return 'Sexual Abuse'
+        elif 'excessive force' in text_lower or 'police brutality' in text_lower:
+            return 'Excessive Force'
+        elif 'civil rights' in text_lower or 'discrimination' in text_lower:
+            return 'Civil Rights Violation'
         elif 'corruption' in text_lower or 'bribery' in text_lower:
             return 'Corruption'
-        elif 'fraud' in text_lower or 'embezzlement' in text_lower:
+        elif 'fraud' in text_lower or 'embezzlement' in text_lower or 'money laundering' in text_lower:
             return 'Financial Crime'
+        elif 'perjury' in text_lower or 'obstruction' in text_lower or 'false statement' in text_lower:
+            return 'Perjury/Obstruction'
+        elif 'tax evasion' in text_lower or 'tax fraud' in text_lower:
+            return 'Tax Evasion'
+        elif 'drug' in text_lower or 'controlled substance' in text_lower:
+            return 'Drug-Related Offense'
+        elif 'election' in text_lower or 'voting' in text_lower:
+            return 'Election Fraud'
+        elif 'abuse of authority' in text_lower or 'abuse of power' in text_lower:
+            return 'Abuse of Authority'
+        elif 'police' in text_lower or 'law enforcement' in text_lower:
+            return 'Police Misconduct'
         return 'Misconduct'
 
     def _extract_status(self, text):
