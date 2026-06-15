@@ -87,6 +87,20 @@ def get_name(text):
 # DOJ FEDERAL SCRAPER
 # ============================================================================
 
+def get_jurisdiction_mapping():
+    """Get location code -> jurisdiction_id mapping from Supabase."""
+    try:
+        from supabase import create_client
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+        resp = supabase.table('jurisdictions').select('id,jurisdiction_code').execute()
+        mapping = {j['jurisdiction_code']: j['id'] for j in resp.data}
+        return mapping
+    except Exception as e:
+        print(f"Error loading jurisdictions: {e}")
+        return {}
+
+JURISDICTION_MAP = {}
+
 def scrape_doj():
     """Scrape DOJ federal cases - paginated to get all results."""
     print("\n" + "="*70)
@@ -150,6 +164,7 @@ def scrape_doj():
                         official_type = get_official_type(position)
 
                         case = {
+                            'jurisdiction_id': JURISDICTION_MAP.get('US', 1),
                             'full_name': full_name,
                             'title': title[:150],
                             'position_title': position,
@@ -205,6 +220,7 @@ class StateCourtScraper(ABC):
     def add_case(self, title, name, position, status, details, source_url):
         """Helper to add a case with standard formatting."""
         case = {
+            'jurisdiction_id': JURISDICTION_MAP.get(self.state_code, 1),
             'full_name': name or get_name(title),
             'title': title[:150],
             'position_title': position or get_position(title),
@@ -417,10 +433,17 @@ def upload_to_supabase(cases, source_type="unified"):
 # ============================================================================
 
 def main():
+    global JURISDICTION_MAP
+
     print("\n" + "="*80)
     print("VeriScope Unified Master Scraper")
     print("Federal (DOJ) + All 50 States + 5 Territories")
     print("="*80)
+
+    # Load jurisdiction mapping
+    print("\nLoading jurisdiction mapping...")
+    JURISDICTION_MAP = get_jurisdiction_mapping()
+    print(f"Loaded {len(JURISDICTION_MAP)} jurisdictions")
 
     # Scrape DOJ
     doj_cases = scrape_doj()
