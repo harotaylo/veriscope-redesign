@@ -401,7 +401,10 @@ def upload_to_supabase(cases, source_type="unified"):
                 uploaded += len(chunk)
                 print(f"  [+] {uploaded}/{len(new_cases)}")
             except Exception as e:
-                print(f"  Error: {str(e)[:60]}")
+                error_str = str(e)
+                print(f"  Error: {error_str}")
+                if uploaded == 0 and i == 0:
+                    print(f"  FIRST CASE: {chunk[0]}")
 
         return uploaded
 
