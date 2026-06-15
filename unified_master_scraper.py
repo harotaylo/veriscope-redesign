@@ -321,14 +321,14 @@ def scrape_all_states():
 
             all_cases.extend(cases)
             state_counts[state_code] = len(cases)
-            print(f"✓ {len(cases)}")
+            print(f"OK {len(cases)}")
 
             time.sleep(0.5)
 
         except Exception as e:
             error_msg = str(e)[:40]
             errors.append(f"{state_code}: {error_msg}")
-            print(f"✗ {error_msg}")
+            print(f"ERROR {error_msg}")
 
     return all_cases, state_counts, errors
 
@@ -421,11 +421,11 @@ def main():
 
     # Scrape DOJ
     doj_cases = scrape_doj()
-    print(f"\n✓ DOJ: {len(doj_cases)} federal cases")
+    print(f"\n[OK] DOJ: {len(doj_cases)} federal cases")
 
     # Scrape all states
     state_cases, state_counts, errors = scrape_all_states()
-    print(f"\n✓ States: {len(state_cases)} state cases")
+    print(f"\n[OK] States: {len(state_cases)} state cases")
 
     # Combine
     all_cases = doj_cases + state_cases
