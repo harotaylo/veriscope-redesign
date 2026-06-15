@@ -10,18 +10,22 @@ SUPABASE_URL = 'https://sqaibfaniwbixviptilx.supabase.co'
 SUPABASE_KEY = 'sb_publishable_xopITtNbV8D0CGRi0Qq1kg_5wLInWPJ'
 
 POSITIONS = {
-    'judge': 'Judge', 'magistrate': 'Magistrate', 'court clerk': 'Court Clerk',
-    'sheriff': 'Sheriff', 'deputy': 'Deputy', 'constable': 'Constable',
-    'prosecutor': 'Prosecutor', 'district attorney': 'District Attorney',
-    'attorney general': 'Attorney General', 'attorney': 'Attorney',
-    'chief': 'Chief', 'director': 'Director', 'official': 'Official'
+    'judge': 'Judge', 'senator': 'Senator', 'representative': 'Representative',
+    'governor': 'Governor', 'mayor': 'Mayor', 'sheriff': 'Sheriff',
+    'deputy': 'Deputy', 'constable': 'Constable', 'marshal': 'Marshal',
+    'police': 'Police Officer', 'commissioner': 'Commissioner',
+    'director': 'Director', 'chief': 'Chief', 'attorney': 'Attorney',
+    'magistrate': 'Magistrate', 'prosecutor': 'Prosecutor',
+    'district attorney': 'District Attorney', 'official': 'Official'
 }
 
 POSITION_TYPE = {
-    'Judge': 'Judicial', 'Magistrate': 'Judicial', 'Court Clerk': 'Judicial',
-    'Sheriff': 'Law Enforcement', 'Deputy': 'Law Enforcement', 'Constable': 'Law Enforcement',
-    'Prosecutor': 'Legal', 'District Attorney': 'Legal', 'Attorney General': 'Legal',
-    'Attorney': 'Legal', 'Chief': 'Law Enforcement', 'Director': 'Executive',
+    'Judge': 'Judicial', 'Senator': 'Legislative', 'Representative': 'Legislative',
+    'Governor': 'Executive', 'Mayor': 'Executive', 'Sheriff': 'Law Enforcement',
+    'Deputy': 'Law Enforcement', 'Constable': 'Law Enforcement', 'Marshal': 'Law Enforcement',
+    'Police Officer': 'Law Enforcement', 'Commissioner': 'Executive',
+    'Director': 'Executive', 'Chief': 'Law Enforcement', 'Attorney': 'Legal',
+    'Magistrate': 'Judicial', 'Prosecutor': 'Legal', 'District Attorney': 'Legal',
     'Official': 'Executive'
 }
 
@@ -37,9 +41,23 @@ STATE_CODES = {
 
 def get_position(text):
     text_lower = text.lower()
-    for keyword, position in POSITIONS.items():
+    # Check longer keywords first to avoid partial matches
+    sorted_keywords = sorted(POSITIONS.keys(), key=len, reverse=True)
+    for keyword in sorted_keywords:
         if keyword in text_lower:
-            return position
+            return POSITIONS[keyword]
+    # Try regex patterns as fallback
+    patterns = [
+        r'\bHon\.\s+', r'\bJudge\b', r'\bSheriff\b', r'\bDeputy\b',
+        r'\bMarshal\b', r'\bConstable\b', r'\bChief\b', r'\bOfficer\b',
+        r'\bProsecutor\b', r'\bAttorney\b', r'\bDirector\b'
+    ]
+    for pattern in patterns:
+        if re.search(pattern, text, re.IGNORECASE):
+            match = re.search(pattern, text, re.IGNORECASE).group()
+            for kw, pos in POSITIONS.items():
+                if kw in match.lower():
+                    return pos
     return 'Official'
 
 def get_official_type(position):
@@ -48,16 +66,23 @@ def get_official_type(position):
 def get_status(text):
     text_lower = text.lower()
 
-    if 'indicted' in text_lower or 'grand jury' in text_lower:
-        return 'Indicted'
-    elif 'charged' in text_lower and 'convicted' not in text_lower:
-        return 'Indicted'
-    elif 'acquitted' in text_lower or 'not guilty' in text_lower:
-        return 'Acquitted'
-    elif 'dismissed' in text_lower:
-        return 'Dismissed'
-    elif 'convicted' in text_lower or 'guilty' in text_lower or 'sentenced' in text_lower:
+    # Check convicted first (highest priority)
+    if 'convicted' in text_lower or 'guilty plea' in text_lower or 'guilty verdict' in text_lower:
         return 'Convicted'
+    elif 'sentenced' in text_lower or 'imprisonment' in text_lower or 'prison' in text_lower:
+        return 'Convicted'
+    # Then acquitted
+    elif 'acquitted' in text_lower or 'not guilty' in text_lower or 'found not guilty' in text_lower:
+        return 'Acquitted'
+    # Then dismissed
+    elif 'dismissed' in text_lower or 'case dismissed' in text_lower or 'charges dismissed' in text_lower:
+        return 'Dismissed'
+    # Then indicted/charged
+    elif 'indicted' in text_lower or 'grand jury' in text_lower or 'indictment' in text_lower:
+        return 'Indicted'
+    elif 'charged' in text_lower or 'arraigned' in text_lower or 'charges filed' in text_lower:
+        return 'Indicted'
+    # Default based on context
     else:
         return 'Indicted'
 
