@@ -13,8 +13,18 @@ VALID_STATUS = ['Indicted', 'Convicted', 'Acquitted', 'Dismissed']
 POSITIONS = {
     'judge': 'Judge', 'senator': 'Senator', 'representative': 'Representative',
     'governor': 'Governor', 'mayor': 'Mayor', 'sheriff': 'Sheriff',
+    'deputy': 'Deputy', 'constable': 'Constable', 'marshal': 'Marshal',
     'police': 'Police Officer', 'commissioner': 'Commissioner',
     'director': 'Director', 'chief': 'Chief', 'attorney': 'Attorney', 'official': 'Official'
+}
+
+POSITION_TYPE = {
+    'Judge': 'Judicial', 'Senator': 'Legislative', 'Representative': 'Legislative',
+    'Governor': 'Executive', 'Mayor': 'Executive', 'Sheriff': 'Law Enforcement',
+    'Deputy': 'Law Enforcement', 'Constable': 'Law Enforcement', 'Marshal': 'Law Enforcement',
+    'Police Officer': 'Law Enforcement', 'Commissioner': 'Executive',
+    'Director': 'Executive', 'Chief': 'Law Enforcement', 'Attorney': 'Legal',
+    'Official': 'Executive'
 }
 
 STATES = {
@@ -30,6 +40,9 @@ def get_position(text):
         if keyword in text_lower:
             return position
     return 'Official'
+
+def get_official_type(position):
+    return POSITION_TYPE.get(position, 'Executive')
 
 def get_location(text):
     for state_code, state_name in STATES.items():
@@ -61,7 +74,7 @@ def get_name(title):
         if 5 < len(name) < 150:
             return name[:100]
     
-    match = re.search(r'(Judge|Mayor|Sheriff|Senator|Official)\s+([A-Z][a-z]+\s+[A-Z][a-z]+)', title)
+    match = re.search(r'(Judge|Mayor|Sheriff|Senator|Official|Deputy|Constable|Marshal|Chief|Commissioner|Governor|Director|Attorney|Representative|Officer)\s+([A-Z][a-z]+\s+[A-Z][a-z]+)', title)
     if match:
         return match.group(2)[:100]
     
@@ -120,12 +133,13 @@ def scrape_doj():
                     position = get_position(combined)
                     location = get_location(title)
                     status = get_status(combined)
-                    
+                    official_type = get_official_type(position)
+
                     case = {
                         'full_name': full_name,
                         'title': title[:150],
                         'position_title': position,
-                        'official_type': 'Executive',
+                        'official_type': official_type,
                         'location': location,
                         'level': 'Federal',
                         'category': 'Corruption',
