@@ -154,7 +154,7 @@ def scrape_doj():
                             'title': title[:150],
                             'position_title': position,
                             'official_type': official_type,
-                            'location': 'Federal',
+                            'location': 'US',
                             'level': 'Federal',
                             'category': 'Corruption',
                             'abuse_of_power_type': 'Corruption',
