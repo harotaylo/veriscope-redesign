@@ -100,66 +100,77 @@ def scrape_doj():
     
     for search_term in searches:
         print(f"Searching: {search_term}")
-        
-        try:
-            params = {
-                'parameters[title]': search_term,
-                'page': 0,
-                'pagesize': 100
-            }
-            
-            resp = requests.get(url, params=params, timeout=10)
-            
-            if resp.status_code != 200:
-                print(f"  Status: {resp.status_code}")
-                continue
-            
-            data = resp.json()
-            results = data.get('results', [])
-            print(f"  Found: {len(results)}")
-            
-            for result in results:
-                try:
-                    title = result.get('title', '')
-                    body = result.get('body', '')
-                    source_url = result.get('url', '')
-                    
-                    if not title or len(title) < 5:
-                        continue
-                    
-                    combined = f"{title} {body}"
-                    
-                    full_name = get_name(title)
-                    position = get_position(combined)
-                    location = get_location(title)
-                    status = get_status(combined)
-                    official_type = get_official_type(position)
+        page = 0
+        total_found = 0
 
-                    case = {
-                        'full_name': full_name,
-                        'title': title[:150],
-                        'position_title': position,
-                        'official_type': official_type,
-                        'location': location,
-                        'level': 'Federal',
-                        'category': 'Corruption',
-                        'abuse_of_power_type': 'Corruption',
-                        'case_status': status,
-                        'details': body[:1000],
-                        'source_url': source_url,
-                        'source_type': 'court_record',
-                        'source_date': str(datetime.now().date()),
-                        'publication_status': 'draft',
-                        'verified_by': 'doj_scraper',
-                        'verified_at': datetime.now().isoformat(),
-                        'fingerprint': hashlib.md5(source_url.encode()).hexdigest()[:16]
-                    }
-                    
-                    all_cases.append(case)
-                
-                except:
-                    continue
-        
+        try:
+            while True:
+                params = {
+                    'parameters[title]': search_term,
+                    'page': page,
+                    'pagesize': 100
+                }
+
+                resp = requests.get(url, params=params, timeout=10)
+
+                if resp.status_code != 200:
+                    print(f"  Status: {resp.status_code}")
+                    break
+
+                data = resp.json()
+                results = data.get('results', [])
+
+                if not results:
+                    break
+
+                total_found += len(results)
+
+                for result in results:
+                    try:
+                        title = result.get('title', '')
+                        body = result.get('body', '')
+                        source_url = result.get('url', '')
+
+                        if not title or len(title) < 5:
+                            continue
+
+                        combined = f"{title} {body}"
+
+                        full_name = get_name(title)
+                        position = get_position(combined)
+                        location = get_location(title)
+                        status = get_status(combined)
+                        official_type = get_official_type(position)
+
+                        case = {
+                            'full_name': full_name,
+                            'title': title[:150],
+                            'position_title': position,
+                            'official_type': official_type,
+                            'location': location,
+                            'level': 'Federal',
+                            'category': 'Corruption',
+                            'abuse_of_power_type': 'Corruption',
+                            'case_status': status,
+                            'details': body[:1000],
+                            'source_url': source_url,
+                            'source_type': 'court_record',
+                            'source_date': str(datetime.now().date()),
+                            'publication_status': 'draft',
+                            'verified_by': 'doj_scraper',
+                            'verified_at': datetime.now().isoformat(),
+                            'fingerprint': hashlib.md5(source_url.encode()).hexdigest()[:16]
+                        }
+
+                        all_cases.append(case)
+
+                    except:
+                        continue
+
+                page += 1
+
+            print(f"  Found: {total_found} across {page} pages")
+
         except Exception as e:
             print(f"  Error: {str(e)[:60]}")
             continue
