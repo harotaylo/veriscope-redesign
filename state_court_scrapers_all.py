@@ -383,130 +383,429 @@ class AlabamaScraper(StateCourtScraper):
             print(f"    Error: {str(e)[:40]}")
         return self.cases
 
-# Additional states (28 more to reach all 50)
 class IowaScraperScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.iowaattorneygeneral.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class KansasScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.ag.ks.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class UtahScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.uag.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class NevadaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ag.nv.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class NewMexicoScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.oag.state.nm.us/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class ArkansasScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.arkansasag.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class MississippiScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.ag.ms.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class WestVirginiaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.ag.wv.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class NebraskaScaper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.ag.ne.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class IdahoScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.ag.idaho.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class MaineScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.maine.gov/ag/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class MontanaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://doj.mt.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class RhodeIslandScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ri.gov/en/government/general-treasurer'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class DelawareScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://dnrec.delaware.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class SouthDakotaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://sdag.sd.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class NorthDakotaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.ag.nd.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class AlaskaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://law.alaska.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class HawaiiScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ag.hawaii.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class VermontScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ago.vermont.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class WyomingScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ag.wyo.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class PuertoRicoScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.justicia.pr.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class VirginIslandsScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ag.vi.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class GuamScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://ag.guam.gov/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class AmericanSamoaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.asag.gov.as/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 class NorthernMarianaScraper(StateCourtScraper):
     def scrape(self):
         print(f"  Scraping {self.state_name}...")
+        try:
+            url = 'https://www.cnmilaw.org/'
+            resp = requests.get(url, headers=self.headers, timeout=10)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.content, 'html.parser')
+                articles = soup.find_all('a')[:30]
+                for article in articles:
+                    title = article.get_text().strip()
+                    if any(kw in title.lower() for kw in ['convicted', 'charged', 'indicted']):
+                        self.add_case(title, None, None, None, '', article.get('href', ''))
+        except Exception as e:
+            print(f"    Error: {str(e)[:40]}")
         return self.cases
 
 # Map all states to scrapers
