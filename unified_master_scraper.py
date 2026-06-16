@@ -27,13 +27,13 @@ POSITIONS = {
 }
 
 POSITION_TYPE = {
-    'Judge': 'Judicial', 'Senator': 'Legislative', 'Representative': 'Legislative',
-    'Governor': 'Executive', 'Mayor': 'Executive', 'Sheriff': 'Law Enforcement',
+    'Judge': 'Judicial', 'Senator': 'Judicial', 'Representative': 'Judicial',
+    'Governor': 'Judicial', 'Mayor': 'Judicial', 'Sheriff': 'Law Enforcement',
     'Deputy': 'Law Enforcement', 'Constable': 'Law Enforcement', 'Marshal': 'Law Enforcement',
-    'Police Officer': 'Law Enforcement', 'Commissioner': 'Executive',
-    'Director': 'Executive', 'Chief': 'Law Enforcement', 'Attorney': 'Legal',
-    'Magistrate': 'Judicial', 'Prosecutor': 'Legal', 'District Attorney': 'Legal',
-    'Official': 'Executive'
+    'Police Officer': 'Law Enforcement', 'Commissioner': 'Judicial',
+    'Director': 'Judicial', 'Chief': 'Law Enforcement', 'Attorney': 'Judicial',
+    'Magistrate': 'Judicial', 'Prosecutor': 'Judicial', 'District Attorney': 'Judicial',
+    'Official': 'Judicial'
 }
 
 def get_position(text):
