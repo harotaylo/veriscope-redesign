@@ -1,241 +1,277 @@
-import argparse, json, logging, time, re
+"""
+VeriScope USAO Scraper with Location Extraction
+Scrapes DOJ USAO press releases with proper federal district mapping
+"""
+
+import argparse
+import json
+import logging
+import re
+import time
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%H:%M:%S"
+)
 log = logging.getLogger(__name__)
 
-SEARCH_KEYWORDS = [
-    # Judicial
-    "judge","magistrate judge","district judge","circuit judge","bankruptcy judge",
-    "immigration judge","administrative law judge","superior court judge","county judge",
-    "municipal court judge","magistrate","clerk of court",
-    # Legislative - Federal
-    "senator","congressman","congresswoman","representative",
-    # Legislative - State
-    "state senator","state representative","state assemblyman","state assemblywoman",
-    "state delegate","state lawmaker","state legislator",
-    # Legislative - Local
-    "councilman","councilmember","councilwoman","alderman","alderwoman",
-    "county commissioner","county supervisor","school board member",
-    # Executive - State/Local
-    "governor","mayor","city manager","county executive","lieutenant governor",
-    # Law Enforcement - Federal
-    "fbi agent","dea agent","atf agent","ice agent","ice officer",
-    "border patrol agent","customs officer","u.s. marshal","deputy marshal",
-    "secret service agent","postal inspector","tsa officer","irs agent","federal agent",
-    # Law Enforcement - State
-    "state trooper","highway patrol officer",
-    # Law Enforcement - Local
-    "sheriff","deputy sheriff","police officer","police chief","police detective",
-    "constable","warden","jailer","correctional officer","correction officer",
-    "jail officer","prison guard","probation officer","parole officer",
-    "fire chief","district attorney","comptroller","auditor",
-    "former officer","former deputy","former detective","former trooper",
-    "former prosecutor","former agent","former warden",
+# Federal District Mapping
+DISTRICT_MAP = {
+    'NORTHERN DISTRICT OF CALIFORNIA': 'California, Northern',
+    'SOUTHERN DISTRICT OF CALIFORNIA': 'California, Southern',
+    'EASTERN DISTRICT OF CALIFORNIA': 'California, Eastern',
+    'CENTRAL DISTRICT OF CALIFORNIA': 'California, Central',
+    'NORTHERN DISTRICT OF FLORIDA': 'Florida, Northern',
+    'SOUTHERN DISTRICT OF FLORIDA': 'Florida, Southern',
+    'MIDDLE DISTRICT OF FLORIDA': 'Florida, Middle',
+    'NORTHERN DISTRICT OF GEORGIA': 'Georgia, Northern',
+    'SOUTHERN DISTRICT OF GEORGIA': 'Georgia, Southern',
+    'MIDDLE DISTRICT OF GEORGIA': 'Georgia, Middle',
+    'NORTHERN DISTRICT OF ILLINOIS': 'Illinois, Northern',
+    'SOUTHERN DISTRICT OF ILLINOIS': 'Illinois, Southern',
+    'CENTRAL DISTRICT OF ILLINOIS': 'Illinois, Central',
+    'NORTHERN DISTRICT OF INDIANA': 'Indiana, Northern',
+    'SOUTHERN DISTRICT OF INDIANA': 'Indiana, Southern',
+    'NORTHERN DISTRICT OF IOWA': 'Iowa, Northern',
+    'SOUTHERN DISTRICT OF IOWA': 'Iowa, Southern',
+    'EASTERN DISTRICT OF KENTUCKY': 'Kentucky, Eastern',
+    'WESTERN DISTRICT OF KENTUCKY': 'Kentucky, Western',
+    'EASTERN DISTRICT OF LOUISIANA': 'Louisiana, Eastern',
+    'MIDDLE DISTRICT OF LOUISIANA': 'Louisiana, Middle',
+    'WESTERN DISTRICT OF LOUISIANA': 'Louisiana, Western',
+    'EASTERN DISTRICT OF MICHIGAN': 'Michigan, Eastern',
+    'WESTERN DISTRICT OF MICHIGAN': 'Michigan, Western',
+    'NORTHERN DISTRICT OF MISSISSIPPI': 'Mississippi, Northern',
+    'SOUTHERN DISTRICT OF MISSISSIPPI': 'Mississippi, Southern',
+    'EASTERN DISTRICT OF MISSOURI': 'Missouri, Eastern',
+    'WESTERN DISTRICT OF MISSOURI': 'Missouri, Western',
+    'NORTHERN DISTRICT OF NEW YORK': 'New York, Northern',
+    'SOUTHERN DISTRICT OF NEW YORK': 'New York, Southern',
+    'EASTERN DISTRICT OF NEW YORK': 'New York, Eastern',
+    'WESTERN DISTRICT OF NEW YORK': 'New York, Western',
+    'EASTERN DISTRICT OF NORTH CAROLINA': 'North Carolina, Eastern',
+    'MIDDLE DISTRICT OF NORTH CAROLINA': 'North Carolina, Middle',
+    'WESTERN DISTRICT OF NORTH CAROLINA': 'North Carolina, Western',
+    'NORTHERN DISTRICT OF OHIO': 'Ohio, Northern',
+    'SOUTHERN DISTRICT OF OHIO': 'Ohio, Southern',
+    'NORTHERN DISTRICT OF OKLAHOMA': 'Oklahoma, Northern',
+    'EASTERN DISTRICT OF OKLAHOMA': 'Oklahoma, Eastern',
+    'WESTERN DISTRICT OF OKLAHOMA': 'Oklahoma, Western',
+    'EASTERN DISTRICT OF PENNSYLVANIA': 'Pennsylvania, Eastern',
+    'MIDDLE DISTRICT OF PENNSYLVANIA': 'Pennsylvania, Middle',
+    'WESTERN DISTRICT OF PENNSYLVANIA': 'Pennsylvania, Western',
+    'EASTERN DISTRICT OF TENNESSEE': 'Tennessee, Eastern',
+    'MIDDLE DISTRICT OF TENNESSEE': 'Tennessee, Middle',
+    'WESTERN DISTRICT OF TENNESSEE': 'Tennessee, Western',
+    'NORTHERN DISTRICT OF TEXAS': 'Texas, Northern',
+    'SOUTHERN DISTRICT OF TEXAS': 'Texas, Southern',
+    'EASTERN DISTRICT OF TEXAS': 'Texas, Eastern',
+    'WESTERN DISTRICT OF TEXAS': 'Texas, Western',
+    'EASTERN DISTRICT OF VIRGINIA': 'Virginia, Eastern',
+    'WESTERN DISTRICT OF VIRGINIA': 'Virginia, Western',
+    'EASTERN DISTRICT OF WASHINGTON': 'Washington, Eastern',
+    'WESTERN DISTRICT OF WASHINGTON': 'Washington, Western',
+    'NORTHERN DISTRICT OF WEST VIRGINIA': 'West Virginia, Northern',
+    'SOUTHERN DISTRICT OF WEST VIRGINIA': 'West Virginia, Southern',
+    'EASTERN DISTRICT OF WISCONSIN': 'Wisconsin, Eastern',
+    'WESTERN DISTRICT OF WISCONSIN': 'Wisconsin, Western',
+    'DISTRICT OF COLUMBIA': 'District of Columbia',
+}
+
+PUBLIC_OFFICIAL_KEYWORDS = [
+    'judge', 'magistrate', 'senator', 'congressman', 'representative',
+    'state senator', 'state representative', 'mayor', 'governor',
+    'sheriff', 'police officer', 'district attorney', 'prosecutor',
+    'federal agent', 'fbi agent', 'dea agent', 'atf agent',
+    'city council', 'county commissioner', 'alderman', 'councilman'
 ]
 
 MISCONDUCT_KEYWORDS = [
-    "convicted","guilty plea","pleaded guilty","pled guilty","pleads guilty",
-    "plead guilty","indicted","grand jury","charged with","charges filed",
-    "arrested","sentenced","imprisoned","removed from office","suspended","censured",
-    "bribery","extortion","fraud","embezzlement","corruption","money laundering",
-    "wire fraud","mail fraud","excessive force","obstruction","perjury",
-    "sexual assault","csam","child pornography","child exploitation",
-    "child sexual abuse","sex trafficking","civil rights","drug trafficking",
-    "racketeering","tax evasion","kickback",
+    'convicted', 'guilty plea', 'indicted', 'charged', 'sentenced',
+    'bribery', 'extortion', 'fraud', 'corruption', 'embezzlement',
+    'money laundering', 'wire fraud', 'mail fraud'
 ]
 
-REJECT_KEYWORDS = [
-    "sworn in","takes office","inaugurated","appointed","confirmed","nominated",
-    "announced candidacy","honors","hometown hero","recognizes","award","retirement",
-    "retires","promoted","promotion","elected","wins election",
-    # Only reject "judge sentences X" when X is clearly a non-official (not "judge sentenced")
-    "judge sentences drug dealer","judge sentences gang","judge sentences terrorist",
-]
-
-SESSION = requests.Session()
-SESSION.headers.update({"User-Agent": "Mozilla/5.0 (compatible; VeriScope-Research-Bot/1.0)"})
-DELAY = 1.0
-
-def get(url, params=None):
-    for attempt in range(1, 4):
+class USAOScraper:
+    def __init__(self):
+        self.cases = []
+        self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        })
+    
+    def extract_location(self, text):
+        """Extract federal district from press release text"""
+        if not text:
+            return "Unknown"
+        
+        text_upper = text.upper()
+        
+        # Look for "U.S. Attorney for the District of..."
+        match = re.search(
+            r"U\.S\.\s+ATTORNEY(?:'S\s+OFFICE)?\s+(?:FOR\s+THE\s+)?(?:DISTRICT\s+OF\s+)?(?:THE\s+)?(.+?)(?:\.|,|ANNOUNCED|$)",
+            text_upper
+        )
+        
+        if match:
+            district_text = match.group(1).strip()
+            # Clean up the text
+            district_text = re.sub(r'\s+', ' ', district_text)
+            
+            # Match against known districts
+            for key, value in DISTRICT_MAP.items():
+                if key in district_text:
+                    return value
+        
+        # Fallback: look for state names
+        states = [
+            'CALIFORNIA', 'FLORIDA', 'GEORGIA', 'NEW YORK', 'TEXAS', 'PENNSYLVANIA',
+            'ILLINOIS', 'OHIO', 'VIRGINIA', 'NORTH CAROLINA', 'TENNESSEE', 'LOUISIANA',
+            'MICHIGAN', 'MINNESOTA', 'WISCONSIN', 'MASSACHUSETTS', 'NEW JERSEY',
+            'COLORADO', 'WASHINGTON', 'ARIZONA', 'OKLAHOMA', 'OREGON', 'INDIANA',
+            'MISSOURI', 'UTAH', 'NEVADA', 'NEW MEXICO', 'KANSAS', 'ARKANSAS',
+            'IOWA', 'CONNECTICUT', 'KENTUCKY', 'ALABAMA', 'SOUTH CAROLINA',
+            'MARYLAND', 'NEBRASKA', 'IDAHO', 'HAWAII', 'MAINE', 'VERMONT',
+            'ALASKA', 'DELAWARE', 'DISTRICT OF COLUMBIA'
+        ]
+        
+        for state in states:
+            if state in text_upper:
+                return state.title()
+        
+        return "Unknown"
+    
+    def is_relevant_case(self, title, details):
+        """Check if case is about public official misconduct"""
+        text = (title + " " + details).lower()
+        
+        has_official = any(kw in text for kw in PUBLIC_OFFICIAL_KEYWORDS)
+        has_misconduct = any(kw in text for kw in MISCONDUCT_KEYWORDS)
+        
+        return has_official and has_misconduct
+    
+    def parse_case(self, item):
+        """Convert press release to case object"""
         try:
-            r = SESSION.get(url, params=params, timeout=15)
-            if r.status_code == 200: return r
-            if r.status_code == 404: return None
-            log.warning("HTTP %s attempt %d: %s", r.status_code, attempt, url)
+            title = item.get('title', 'Unknown').strip()
+            url = item.get('url', '')
+            details = item.get('details', '')
+            location = item.get('location', 'Unknown')
+            
+            return {
+                'title': title,
+                'location': location,
+                'details': details,
+                'url': url,
+                'official_type': 'Public Official',
+                'position_title': 'Unknown',
+                'case_status': 'Unknown',
+                'scraped_at': datetime.now().isoformat()
+            }
         except Exception as e:
-            log.warning("Error %s: %s", url, e)
-        time.sleep(DELAY * attempt)
-    return None
-
-def search_by_keyword(keyword, page=0, pagesize=50):
-    r = get("https://www.justice.gov/api/v1/press_releases.json", {
-        "parameters[title]": keyword,
-        "pagesize": pagesize,
-        "page": page,
-        "sort": "date",
-        "direction": "DESC"
-    })
-    if not r: return [], 0
-    try:
-        data = r.json()
-        total = int(data.get("metadata",{}).get("resultset",{}).get("count", 0))
-        return data.get("results", []), total
-    except Exception as e:
-        log.warning("JSON parse error: %s", e)
-        return [], 0
-
-def html_to_text(html):
-    if not html: return ""
-    return BeautifulSoup(html, "lxml").get_text(separator=" ", strip=True)
-
-def contains_any(text, kws):
-    t = text.lower()
-    return any(k in t for k in kws)
-
-def is_relevant(title):
-    t = title.lower()
-    # Hard reject non-misconduct events
-    non_misconduct = [
-        "sworn in", "takes office", "inaugurated", "appointed", "confirmed", "nominated",
-        "announced candidacy", "hometown hero", "recognizes", "retires", "elected",
-        "wins election",
-    ]
-    if contains_any(t, non_misconduct): return False
-    if not contains_any(t, MISCONDUCT_KEYWORDS): return False
-    return True
-
-def get_usao(item):
-    comps = item.get("component", [])
-    names = [c.get("name","") if isinstance(c, dict) else str(c) for c in comps]
-    usaos = [n for n in names if n.startswith("USAO -")]
-    return usaos[0] if usaos else None
-
-def parse_date(s):
-    if not s: return None
-    if str(s).lstrip("-").isdigit(): return datetime.utcfromtimestamp(int(s)).strftime("%Y-%m-%d")
-    for fmt in ["%B %d, %Y","%b %d, %Y","%m/%d/%Y","%Y-%m-%d"]:
-        try: return datetime.strptime(str(s).strip(), fmt).strftime("%Y-%m-%d")
-        except: pass
-    return None
-
-def extract_location(text):
-    m = re.match(r"^([A-Z][A-Za-z .]+(?:,\s*[A-Z]{2})?)\s*[-]", text.strip())
-    return m.group(1).strip() if m else "Unknown"
-
-def case_status(t, b):
-    c = f"{t} {b}".lower()
-    if any(k in c for k in ["acquitted","not guilty"]): return "Acquitted"
-    if any(k in c for k in ["convicted","found guilty","guilty verdict"]): return "Convicted"
-    if any(k in c for k in ["sentenced","sentencing"]): return "Sentenced"
-    if any(k in c for k in ["pleaded guilty","pled guilty","guilty plea","plead guilty","pleads guilty"]): return "Convicted"
-    if any(k in c for k in ["indicted","grand jury"]): return "Indicted"
-    if any(k in c for k in ["charged with","charges filed","arrested"]): return "Charges Filed"
-    if any(k in c for k in ["dismissed","charges dropped"]): return "Dismissed"
-    return "Under Investigation"
-
-def official_type(t, b):
-    c = f"{t} {b}".lower()
-    if any(k in c for k in [
-        "judge","magistrate","clerk of court","superior court","district court judge",
-        "bankruptcy judge","immigration judge","administrative law judge",
-    ]): return "Judicial"
-    if any(k in c for k in [
-        "police","sheriff","deputy","trooper","correctional","jailer","warden",
-        "customs","border patrol","detective","correction officer","prison guard",
-        "probation officer","parole officer","fbi agent","dea agent","atf agent",
-        "ice agent","ice officer","u.s. marshal","deputy marshal","secret service",
-        "postal inspector","tsa officer","irs agent","federal agent","federal officer",
-    ]): return "Law Enforcement"
-    if any(k in c for k in [
-        "senator","representative","congressman","congresswoman",
-        "state senator","state representative","state assemblyman","state assemblywoman",
-        "state delegate","state lawmaker","state legislator",
-        "city council","councilman","councilmember","councilwoman","alderman","alderwoman",
-        "county commissioner","county supervisor","school board",
-    ]): return "Legislative"
-    return "Executive"
-
-def abuse_type(t, b):
-    c = f"{t} {b}".lower()
-    if any(k in c for k in ["csam","child pornography","child exploitation","child sexual abuse","sex trafficking of a minor"]): return "CSAM"
-    if any(k in c for k in ["bribery","kickback","extortion"]): return "Bribery/Extortion"
-    if any(k in c for k in ["fraud","embezzlement","theft","wire fraud","mail fraud"]): return "Fraud/Embezzlement"
-    if any(k in c for k in ["civil rights","excessive force","deprivation of rights"]): return "Civil Rights Violation"
-    if any(k in c for k in ["drug","narcotics","trafficking","fentanyl","cocaine","methamphetamine"]): return "Drug Trafficking"
-    if any(k in c for k in ["obstruction","perjury","false statement"]): return "Obstruction/Perjury"
-    if any(k in c for k in ["sexual assault","rape","sex offense","sexual misconduct"]): return "Sexual Misconduct"
-    return "Corruption"
-
-def to_case(item):
-    title = item.get("title","")
-    body = html_to_text(item.get("body",""))
-    url = item.get("url","")
-    if url and not url.startswith("http"):
-        url = "https://www.justice.gov" + url
-    usao = get_usao(item) or ""
-    return {
-        "full_name": "",
-        "title": title,
-        "position_title": "",
-        "official_type": official_type(title, body),
-        "agency_or_office": usao,
-        "location": extract_location(body),
-        "level": "Federal",
-        "category": "Public Official Misconduct",
-        "abuse_of_power_type": abuse_type(title, body),
-        "specific_charges": "",
-        "case_status": case_status(title, body),
-        "date_charged": parse_date(item.get("date","")),
-        "date_resolved": None,
-        "details": body[:2000],
-        "source_url": url,
-        "source_type": "official_report",
-        "publication_status": "draft",
-        "verified_by": "bulk_import",
-        "verified_at": datetime.utcnow().isoformat() + "Z"
-    }
-
-def scrape_all(max_pages=20):
-    all_cases = []
-    seen = set()
-    for kw in SEARCH_KEYWORDS:
-        log.info("Searching: %s", kw)
-        for page in range(max_pages):
-            results, total = search_by_keyword(kw, page=page, pagesize=50)
-            if not results: break
-            log.info("  page %d: %d results (total: %d)", page, len(results), total)
-            new_this_page = 0
-            for item in results:
-                url = item.get("url","")
-                if url in seen: continue
-                title = item.get("title","")
-                if not get_usao(item): continue
-                if not is_relevant(title): continue
-                seen.add(url)
-                all_cases.append(to_case(item))
-                new_this_page += 1
-                log.info("  + %s", title[:80])
-            time.sleep(DELAY)
-            if len(results) < 50: break
-        log.info("Running total: %d", len(all_cases))
-    return all_cases
-
-def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--output", default="cases.json")
-    p.add_argument("--max-pages", type=int, default=20)
-    p.add_argument("--verbose", action="store_true")
-    args = p.parse_args()
-    if args.verbose: logging.getLogger().setLevel(logging.DEBUG)
-    log.info("Starting VeriScope USAO scraper")
-    cases = scrape_all(args.max_pages)
-    with open(args.output, "w", encoding="utf-8") as f:
-        json.dump(cases, f, indent=2, default=str)
-    log.info("Saved %d cases to %s", len(cases), args.output)
+            log.error(f"Error parsing case: {e}")
+            return None
+    
+    def scrape_press_release(self, url):
+        """Scrape a single DOJ press release"""
+        try:
+            response = self.session.get(url, timeout=10)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Extract title
+            title_tag = soup.find('h1') or soup.find('title')
+            title = title_tag.text.strip() if title_tag else "Unknown"
+            
+            # Extract body text
+            body = soup.find('article') or soup.find('main') or soup.find('body')
+            details = body.get_text() if body else ""
+            
+            # Extract location
+            location = self.extract_location(details)
+            
+            # Check if relevant
+            if not self.is_relevant_case(title, details):
+                return None
+            
+            case_data = {
+                'title': title,
+                'details': details[:1000],
+                'location': location,
+                'url': url
+            }
+            
+            case = self.parse_case(case_data)
+            return case
+        
+        except Exception as e:
+            log.error(f"Error scraping {url}: {e}")
+            return None
+    
+    def scrape_from_list(self, urls):
+        """Scrape multiple press release URLs"""
+        log.info(f"Starting to scrape {len(urls)} URLs")
+        
+        for i, url in enumerate(urls, 1):
+            case = self.scrape_press_release(url)
+            if case:
+                self.cases.append(case)
+                log.info(f"[{i}/{len(urls)}] {case['title'][:50]} -> {case['location']}")
+            else:
+                log.info(f"[{i}/{len(urls)}] Skipped (not relevant)")
+            
+            time.sleep(0.5)  # Be respectful to servers
+        
+        log.info(f"Scraped {len(self.cases)} relevant cases")
+        return self.cases
+    
+    def save_to_json(self, filename='usao_cases.json'):
+        """Save cases to JSON"""
+        with open(filename, 'w') as f:
+            json.dump(self.cases, f, indent=2)
+        log.info(f"Saved {len(self.cases)} cases to {filename}")
+    
+    def get_location_stats(self):
+        """Get statistics on location extraction"""
+        unknown_count = sum(1 for c in self.cases if c['location'] == 'Unknown')
+        known_count = len(self.cases) - unknown_count
+        
+        print(f"\nLocation Extraction Stats:")
+        print(f"  Total cases: {len(self.cases)}")
+        print(f"  With location: {known_count} ({100*known_count//len(self.cases) if self.cases else 0}%)")
+        print(f"  Unknown location: {unknown_count} ({100*unknown_count//len(self.cases) if self.cases else 0}%)")
+        
+        # Show location distribution
+        locations = {}
+        for case in self.cases:
+            loc = case['location']
+            locations[loc] = locations.get(loc, 0) + 1
+        
+        print(f"\n  Top locations:")
+        for loc, count in sorted(locations.items(), key=lambda x: -x[1])[:10]:
+            print(f"    {loc}: {count}")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Scrape DOJ USAO press releases')
+    parser.add_argument('--file', help='JSON file with URLs to scrape')
+    parser.add_argument('--output', default='usao_cases.json', help='Output JSON file')
+    args = parser.parse_args()
+    
+    scraper = USAOScraper()
+    
+    if args.file:
+        with open(args.file, 'r') as f:
+            urls = json.load(f)
+        scraper.scrape_from_list(urls)
+    else:
+        log.info("No input file specified. Use --file to provide URLs.")
+        log.info("Example: python usao_scraper.py --file urls.json --output cases.json")
+    
+    if scraper.cases:
+        scraper.save_to_json(args.output)
+        scraper.get_location_stats()

@@ -35,6 +35,12 @@ class VeriScopeIngestionPipeline:
         print(f"  Valid: {validation_result['valid']}")
         print(f"  Rejected: {validation_result['invalid']}")
         
+        if validation_result['invalid'] > 0:
+            print("\n  Rejected cases:")
+            for r in validation_result['invalid_cases'][:5]:
+                print(f"    - {r['title'][:50]}")
+                print(f"      Reason: {r['reason']}")
+        
         valid_cases = validation_result['valid_cases']
         if not valid_cases:
             print("\nNo valid cases. Stopping.")
@@ -71,4 +77,25 @@ class VeriScopeIngestionPipeline:
         return {'success': True, 'stages': 3, 'metrics': self.metrics}
 
 if __name__ == "__main__":
-    print("Usage: python main.py <cases.json>")
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <cases.json>")
+        print("\nExample:")
+        print("  python main.py cases.json")
+        sys.exit(1)
+    
+    input_file = sys.argv[1]
+    
+    print(f"Loading cases from: {input_file}")
+    with open(input_file, 'r') as f:
+        cases = json.load(f)
+    
+    pipeline = VeriScopeIngestionPipeline()
+    result = pipeline.ingest(
+        cases,
+        output_file='validated_cases.json',
+        upload=False,
+        dry_run=True
+    )
+    
+    print("\nResult:")
+    print(json.dumps(result, indent=2, default=str))

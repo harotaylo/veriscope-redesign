@@ -126,18 +126,24 @@ def scrape_google_scholar_state(state_code, state_name, max_pages=3):
                 }
 
                 headers = {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
                 }
 
-                resp = requests.get(url, params=params, headers=headers, timeout=15)
+                try:
+                    resp = requests.get(url, params=params, headers=headers, timeout=15)
+                except Exception as e:
+                    print(f"    Network error on '{search_term}': {str(e)[:40]}")
+                    break
 
                 if resp.status_code != 200:
+                    print(f"    HTTP {resp.status_code} for '{search_term}'")
                     break
 
                 soup = BeautifulSoup(resp.content, 'html.parser')
                 results = soup.find_all('div', {'class': 'gs_ri'})
 
                 if not results:
+                    print(f"    No results for '{search_term}' page {page}")
                     break
 
                 for result in results:
