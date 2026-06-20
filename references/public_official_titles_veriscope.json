@@ -1,0 +1,736 @@
+{
+  "official_types": [
+    {
+      "title": "President",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Executive"
+    },
+    {
+      "title": "Vice President",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Executive"
+    },
+    {
+      "title": "U.S. Senator",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "U.S. Congressman",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "U.S. Representative",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "Cabinet Secretary",
+      "category": "Appointed",
+      "jurisdiction_level": "Federal",
+      "notes": "Executive"
+    },
+    {
+      "title": "Federal Judge",
+
+cat > references/public_official_titles_veriscope.json << 'EOF'
+{
+  "official_types": [
+    {
+      "title": "President",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Executive"
+    },
+    {
+      "title": "Vice President",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Executive"
+    },
+    {
+      "title": "U.S. Senator",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "U.S. Congressman",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "U.S. Representative",
+      "category": "Elected",
+      "jurisdiction_level": "Federal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "Cabinet Secretary",
+      "category": "Appointed",
+      "jurisdiction_level": "Federal",
+      "notes": "Executive"
+    },
+    {
+      "title": "Federal Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "Federal",
+      "notes": "District Court"
+    },
+    {
+      "title": "Federal Circuit Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "Federal",
+      "notes": "Appeals/Circuit"
+    },
+    {
+      "title": "Federal Magistrate",
+      "category": "Judicial",
+      "jurisdiction_level": "Federal",
+      "notes": "Lower court"
+    },
+    {
+      "title": "U.S. Marshal",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Federal",
+      "notes": "U.S. Marshals Service"
+    },
+    {
+      "title": "DEA Agent",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Federal",
+      "notes": "Drug Enforcement"
+    },
+    {
+      "title": "FBI Agent",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Federal",
+      "notes": "Federal Bureau of Investigation"
+    },
+    {
+      "title": "Secret Service Agent",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Federal",
+      "notes": "Protection/Investigation"
+    },
+    {
+      "title": "Federal Prosecutor",
+      "category": "Legal",
+      "jurisdiction_level": "Federal",
+      "notes": "Justice Department"
+    },
+    {
+      "title": "Governor",
+      "category": "Elected",
+      "jurisdiction_level": "State",
+      "notes": "Executive"
+    },
+    {
+      "title": "Lieutenant Governor",
+      "category": "Elected",
+      "jurisdiction_level": "State",
+      "notes": "Executive"
+    },
+    {
+      "title": "State Senator",
+      "category": "Elected",
+      "jurisdiction_level": "State",
+      "notes": "Legislative"
+    },
+    {
+      "title": "State Representative",
+      "category": "Elected",
+      "jurisdiction_level": "State",
+      "notes": "Legislative"
+    },
+    {
+      "title": "State Assemblyman",
+      "category": "Elected",
+      "jurisdiction_level": "State",
+      "notes": "Legislative"
+    },
+    {
+      "title": "State Attorney General",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Executive/Legal"
+    },
+    {
+      "title": "State Solicitor General",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Legal"
+    },
+    {
+      "title": "State Treasurer",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Executive"
+    },
+    {
+      "title": "State Auditor",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Executive"
+    },
+    {
+      "title": "State Supreme Court Justice",
+      "category": "Judicial",
+      "jurisdiction_level": "State",
+      "notes": "Appellate"
+    },
+    {
+      "title": "State Appellate Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "State",
+      "notes": "Appellate"
+    },
+    {
+      "title": "State District Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "State",
+      "notes": "Trial court"
+    },
+    {
+      "title": "State Circuit Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "State",
+      "notes": "Trial court"
+    },
+    {
+      "title": "State Magistrate",
+      "category": "Judicial",
+      "jurisdiction_level": "State",
+      "notes": "Lower court"
+    },
+    {
+      "title": "State Corrections Director",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Corrections"
+    },
+    {
+      "title": "State Police Director",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Law Enforcement"
+    },
+    {
+      "title": "State Inspector General",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Oversight"
+    },
+    {
+      "title": "County Commissioner",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Legislative"
+    },
+    {
+      "title": "County Supervisor",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Legislative"
+    },
+    {
+      "title": "County Board Member",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Legislative"
+    },
+    {
+      "title": "District Attorney",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Legal/Prosecutor"
+    },
+    {
+      "title": "County Sheriff",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Law Enforcement"
+    },
+    {
+      "title": "County Clerk",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Administrative"
+    },
+    {
+      "title": "County Recorder",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Administrative"
+    },
+    {
+      "title": "County Treasurer",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Administrative"
+    },
+    {
+      "title": "County Auditor",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Administrative"
+    },
+    {
+      "title": "Coroner",
+      "category": "Elected",
+      "jurisdiction_level": "County",
+      "notes": "Medical Examiner"
+    },
+    {
+      "title": "County Judge",
+      "category": "Appointed",
+      "jurisdiction_level": "County",
+      "notes": "Judicial"
+    },
+    {
+      "title": "County District Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "County",
+      "notes": "Trial court"
+    },
+    {
+      "title": "County Magistrate",
+      "category": "Judicial",
+      "jurisdiction_level": "County",
+      "notes": "Lower court"
+    },
+    {
+      "title": "Justice of the Peace",
+      "category": "Judicial",
+      "jurisdiction_level": "County",
+      "notes": "Lower court"
+    },
+    {
+      "title": "Deputy Sheriff",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Sheriff's office"
+    },
+    {
+      "title": "Undersheriff",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Sheriff's office"
+    },
+    {
+      "title": "County Police Chief",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Police"
+    },
+    {
+      "title": "County Police Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Police"
+    },
+    {
+      "title": "County Detective",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Police"
+    },
+    {
+      "title": "County Investigator",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Law Enforcement"
+    },
+    {
+      "title": "County Jailer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Corrections Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Probation Officer",
+      "category": "Judicial",
+      "jurisdiction_level": "County",
+      "notes": "Court Services"
+    },
+    {
+      "title": "Parole Officer",
+      "category": "Appointed",
+      "jurisdiction_level": "County",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Mayor",
+      "category": "Elected",
+      "jurisdiction_level": "Municipal",
+      "notes": "Executive"
+    },
+    {
+      "title": "City Councilman",
+      "category": "Elected",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "City Council Member",
+      "category": "Elected",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "City Alderman",
+      "category": "Elected",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "Town Supervisor",
+      "category": "Elected",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "Town Board Member",
+      "category": "Elected",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legislative"
+    },
+    {
+      "title": "City Manager",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Executive"
+    },
+    {
+      "title": "City Administrator",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Executive"
+    },
+    {
+      "title": "Police Chief",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "Deputy Police Chief",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "Police Captain",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "Police Lieutenant",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "Police Sergeant",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "Police Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "Detective",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Police"
+    },
+    {
+      "title": "City Attorney",
+      "category": "Legal",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legal"
+    },
+    {
+      "title": "City Prosecutor",
+      "category": "Legal",
+      "jurisdiction_level": "Municipal",
+      "notes": "Legal"
+    },
+    {
+      "title": "Municipal Court Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "Municipal",
+      "notes": "Trial court"
+    },
+    {
+      "title": "Municipal Magistrate",
+      "category": "Judicial",
+      "jurisdiction_level": "Municipal",
+      "notes": "Lower court"
+    },
+    {
+      "title": "City Clerk",
+      "category": "Administrative",
+      "jurisdiction_level": "Municipal",
+      "notes": "Administrative"
+    },
+    {
+      "title": "City Treasurer",
+      "category": "Administrative",
+      "jurisdiction_level": "Municipal",
+      "notes": "Administrative"
+    },
+    {
+      "title": "City Auditor",
+      "category": "Administrative",
+      "jurisdiction_level": "Municipal",
+      "notes": "Administrative"
+    },
+    {
+      "title": "Public Works Director",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Administrative"
+    },
+    {
+      "title": "School Superintendent",
+      "category": "Appointed",
+      "jurisdiction_level": "Education",
+      "notes": "School District"
+    },
+    {
+      "title": "School Board Member",
+      "category": "Elected",
+      "jurisdiction_level": "Education",
+      "notes": "School District"
+    },
+    {
+      "title": "School Board President",
+      "category": "Elected",
+      "jurisdiction_level": "Education",
+      "notes": "School District"
+    },
+    {
+      "title": "Principal",
+      "category": "Appointed",
+      "jurisdiction_level": "Education",
+      "notes": "School"
+    },
+    {
+      "title": "Assistant Principal",
+      "category": "Appointed",
+      "jurisdiction_level": "Education",
+      "notes": "School"
+    },
+    {
+      "title": "State Trooper",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "State",
+      "notes": "State Police"
+    },
+    {
+      "title": "Highway Patrol Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "State",
+      "notes": "State Police"
+    },
+    {
+      "title": "Fish & Game Warden",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "State",
+      "notes": "Wildlife"
+    },
+    {
+      "title": "Park Ranger",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "State",
+      "notes": "Parks"
+    },
+    {
+      "title": "Customs Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Federal",
+      "notes": "Border/Customs"
+    },
+    {
+      "title": "Border Patrol Agent",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Federal",
+      "notes": "Border/Customs"
+    },
+    {
+      "title": "Judge",
+      "category": "Judicial",
+      "jurisdiction_level": "State/County/Municipal",
+      "notes": "General"
+    },
+    {
+      "title": "Magistrate",
+      "category": "Judicial",
+      "jurisdiction_level": "State/County/Municipal",
+      "notes": "Lower court"
+    },
+    {
+      "title": "Public Defender",
+      "category": "Legal",
+      "jurisdiction_level": "State/County",
+      "notes": "Defense"
+    },
+    {
+      "title": "Defense Attorney",
+      "category": "Legal",
+      "jurisdiction_level": "State/County",
+      "notes": "Defense"
+    },
+    {
+      "title": "Prosecutor",
+      "category": "Legal",
+      "jurisdiction_level": "Federal/State/County",
+      "notes": "Prosecution"
+    },
+    {
+      "title": "Assistant District Attorney",
+      "category": "Legal",
+      "jurisdiction_level": "County",
+      "notes": "Prosecution"
+    },
+    {
+      "title": "Assistant Attorney General",
+      "category": "Legal",
+      "jurisdiction_level": "State/Federal",
+      "notes": "Legal"
+    },
+    {
+      "title": "Prison Warden",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Prison Superintendent",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Corrections Director",
+      "category": "Appointed",
+      "jurisdiction_level": "State",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Correctional Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "State",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Detention Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "County/Municipal",
+      "notes": "Corrections"
+    },
+    {
+      "title": "Bailiff",
+      "category": "Judicial",
+      "jurisdiction_level": "State/County/Municipal",
+      "notes": "Court Services"
+    },
+    {
+      "title": "Building Inspector",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Code Enforcement"
+    },
+    {
+      "title": "Health Inspector",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Health/Safety"
+    },
+    {
+      "title": "Fire Chief",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Fire"
+    },
+    {
+      "title": "Fire Inspector",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Fire"
+    },
+    {
+      "title": "Fire Officer",
+      "category": "Law Enforcement",
+      "jurisdiction_level": "Municipal",
+      "notes": "Fire"
+    },
+    {
+      "title": "Planning Commissioner",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Planning"
+    },
+    {
+      "title": "Zoning Inspector",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Code Enforcement"
+    },
+    {
+      "title": "Code Enforcement Officer",
+      "category": "Appointed",
+      "jurisdiction_level": "Municipal",
+      "notes": "Code Enforcement"
+    },
+    {
+      "title": "Assessor",
+      "category": "Appointed",
+      "jurisdiction_level": "County",
+      "notes": "Administrative"
+    },
+    {
+      "title": "Tax Assessor",
+      "category": "Appointed",
+      "jurisdiction_level": "County",
+      "notes": "Administrative"
+    },
+    {
+      "title": "Registrar",
+      "category": "Appointed",
+      "jurisdiction_level": "County/Municipal",
+      "notes": "Administrative"
+    },
+    {
+      "title": "Elections Official",
+      "category": "Appointed",
+      "jurisdiction_level": "County/Municipal",
+      "notes": "Elections"
+    },
+    {
+      "title": "Voter Registrar",
+      "category": "Appointed",
+      "jurisdiction_level": "County/Municipal",
+      "notes": "Elections"
+    }
+  ]
+}
