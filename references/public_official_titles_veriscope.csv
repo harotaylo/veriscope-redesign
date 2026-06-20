@@ -1,0 +1,115 @@
+official_type,category,jurisdiction_level,notes
+President,Elected,Federal,Executive
+Vice President,Elected,Federal,Executive
+U.S. Senator,Elected,Federal,Legislative
+U.S. Congressman,Elected,Federal,Legislative
+U.S. Representative,Elected,Federal,Legislative
+Cabinet Secretary,Appointed,Federal,Executive
+Federal Judge,Judicial,Federal,District Court
+Federal Circuit Judge,Judicial,Federal,Appeals/Circuit
+Federal Magistrate,Judicial,Federal,Lower court
+U.S. Marshal,Law Enforcement,Federal,U.S. Marshals Service
+DEA Agent,Law Enforcement,Federal,Drug Enforcement
+FBI Agent,Law Enforcement,Federal,Federal Bureau of Investigation
+Secret Service Agent,Law Enforcement,Federal,Protection/Investigation
+Federal Prosecutor,Legal,Federal,Justice Department
+Governor,Elected,State,Executive
+Lieutenant Governor,Elected,State,Executive
+State Senator,Elected,State,Legislative
+State Representative,Elected,State,Legislative
+State Assemblyman,Elected,State,Legislative
+State Attorney General,Appointed,State,Executive/Legal
+State Solicitor General,Appointed,State,Legal
+State Treasurer,Appointed,State,Executive
+State Auditor,Appointed,State,Executive
+State Supreme Court Justice,Judicial,State,Appellate
+State Appellate Judge,Judicial,State,Appellate
+State District Judge,Judicial,State,Trial court
+State Circuit Judge,Judicial,State,Trial court
+State Magistrate,Judicial,State,Lower court
+State Corrections Director,Appointed,State,Corrections
+State Police Director,Appointed,State,Law Enforcement
+State Inspector General,Appointed,State,Oversight
+County Commissioner,Elected,County,Legislative
+County Supervisor,Elected,County,Legislative
+County Board Member,Elected,County,Legislative
+District Attorney,Elected,County,Legal/Prosecutor
+County Sheriff,Elected,County,Law Enforcement
+County Clerk,Elected,County,Administrative
+County Recorder,Elected,County,Administrative
+County Treasurer,Elected,County,Administrative
+County Auditor,Elected,County,Administrative
+Coroner,Elected,County,Medical Examiner
+County Judge,Appointed,County,Judicial
+County District Judge,Judicial,County,Trial court
+County Magistrate,Judicial,County,Lower court
+Justice of the Peace,Judicial,County,Lower court
+Deputy Sheriff,Law Enforcement,County,Sheriff's office
+Undersheriff,Law Enforcement,County,Sheriff's office
+County Police Chief,Law Enforcement,County,Police
+County Police Officer,Law Enforcement,County,Police
+County Detective,Law Enforcement,County,Police
+County Investigator,Law Enforcement,County,Law Enforcement
+County Jailer,Law Enforcement,County,Corrections
+Corrections Officer,Law Enforcement,County,Corrections
+Probation Officer,Judicial,County,Court Services
+Parole Officer,Appointed,County,Corrections
+Mayor,Elected,Municipal,Executive
+City Councilman,Elected,Municipal,Legislative
+City Council Member,Elected,Municipal,Legislative
+City Alderman,Elected,Municipal,Legislative
+Town Supervisor,Elected,Municipal,Legislative
+Town Board Member,Elected,Municipal,Legislative
+City Manager,Appointed,Municipal,Executive
+City Administrator,Appointed,Municipal,Executive
+Police Chief,Law Enforcement,Municipal,Police
+Deputy Police Chief,Law Enforcement,Municipal,Police
+Police Captain,Law Enforcement,Municipal,Police
+Police Lieutenant,Law Enforcement,Municipal,Police
+Police Sergeant,Law Enforcement,Municipal,Police
+Police Officer,Law Enforcement,Municipal,Police
+Detective,Law Enforcement,Municipal,Police
+City Attorney,Legal,Municipal,Legal
+City Prosecutor,Legal,Municipal,Legal
+Municipal Court Judge,Judicial,Municipal,Trial court
+Municipal Magistrate,Judicial,Municipal,Lower court
+City Clerk,Administrative,Municipal,Administrative
+City Treasurer,Administrative,Municipal,Administrative
+City Auditor,Administrative,Municipal,Administrative
+Public Works Director,Appointed,Municipal,Administrative
+School Superintendent,Appointed,Education,School District
+School Board Member,Elected,Education,School District
+Principal,Appointed,Education,School
+Assistant Principal,Appointed,Education,School
+State Trooper,Law Enforcement,State,State Police
+Highway Patrol Officer,Law Enforcement,State,State Police
+Fish & Game Warden,Law Enforcement,State,Wildlife
+Park Ranger,Law Enforcement,State,Parks
+Customs Officer,Law Enforcement,Federal,Border/Customs
+Border Patrol Agent,Law Enforcement,Federal,Border/Customs
+Judge,Judicial,State/County/Municipal,General
+Magistrate,Judicial,State/County/Municipal,Lower court
+Public Defender,Legal,State/County,Defense
+Defense Attorney,Legal,State/County,Defense
+Prosecutor,Legal,Federal/State/County,Prosecution
+Assistant District Attorney,Legal,County,Prosecution
+Assistant Attorney General,Legal,State/Federal,Legal
+Prison Warden,Appointed,State,Corrections
+Prison Superintendent,Appointed,State,Corrections
+Corrections Director,Appointed,State,Corrections
+Correctional Officer,Law Enforcement,State,Corrections
+Detention Officer,Law Enforcement,County/Municipal,Corrections
+Bailiff,Judicial,State/County/Municipal,Court Services
+Building Inspector,Appointed,Municipal,Code Enforcement
+Health Inspector,Appointed,Municipal,Health/Safety
+Fire Chief,Appointed,Municipal,Fire
+Fire Inspector,Appointed,Municipal,Fire
+Fire Officer,Law Enforcement,Municipal,Fire
+Planning Commissioner,Appointed,Municipal,Planning
+Zoning Inspector,Appointed,Municipal,Code Enforcement
+Code Enforcement Officer,Appointed,Municipal,Code Enforcement
+Assessor,Appointed,County,Administrative
+Tax Assessor,Appointed,County,Administrative
+Registrar,Appointed,County/Municipal,Administrative
+Elections Official,Appointed,County/Municipal,Elections
+Voter Registrar,Appointed,County/Municipal,Elections
